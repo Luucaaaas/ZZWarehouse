@@ -8,17 +8,14 @@ $dbname = "ZZWarehouse";
 $conn = new mysqli($servername, $username, $password, $dbname);
 
 
-// Traitement du formulaire de connexion
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
     $email = $_POST['email'];
     $password = $_POST['password'];
 
-    // Vérifier les informations d'identification dans la base de données
     $sql = "SELECT * FROM utilisateurs WHERE email = '$email' AND mot_de_passe = '$password'";
     $result = $conn->query($sql);
 
     if ($result->num_rows == 1) {
-        // Utilisateur trouvé, rediriger vers la page d'accueil ou une autre page sécurisée
         header("Location: accueil.php");
         exit();
     } else {
@@ -26,17 +23,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
     }
 }
 
-// Traitement du formulaire d'inscription
+
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['signup'])) {
     $nom = $_POST['nom'];
     $prenom = $_POST['prenom'];
     $email = $_POST['email'];
     $password = $_POST['password'];
 
-    // Insérer les informations de l'utilisateur dans la base de données
+
     $sql = "INSERT INTO utilisateurs (nom, prenom, email, mot_de_passe) VALUES ('$nom', '$prenom', '$email', '$password')";
     if ($conn->query($sql) === TRUE) {
-        // Utilisateur inscrit avec succès, rediriger vers la page de connexion
+
         header("Location: login.php");
         exit();
     } else {
