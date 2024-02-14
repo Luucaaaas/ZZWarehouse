@@ -49,7 +49,7 @@ $conn->close();
 <head>
     <link rel="stylesheet" href="index.css">
     <title>ZZWarehouse | Login</title>
-    <link rel="icon" href="source/logogsbpetit.ico" type="image/x-icon">    
+    <link rel="icon" href="source/img/logogsbpetit.ico" type="image/x-icon">    
 </head>
 <body>
 <div class="container">
