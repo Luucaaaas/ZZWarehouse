@@ -52,32 +52,36 @@ $conn->close();
     <link rel="icon" href="source/logogsbpetit.ico" type="image/x-icon">    
 </head>
 <body>
-    <div class="container">
-        <div class="image-container"></div>
-            <div class="info-container">
-                    <h2>Connexion</h2>
-                    <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+<div class="container">
+    <div class="image-container"></div>
+                <div class="info-container">
+                <div class="main">  	
+
+		<input type="checkbox" id="chk" aria-hidden="true">
+
+			<div class="signup">
+            <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+					<label for="chk" aria-hidden="true">Sign up</label>
+
                     <input type="email" name="email" placeholder="Email" required><br>
                     <input type="password" name="password" placeholder="Mot de passe" required><br>
                     <input type="submit" name="login" value="Se connecter">
                 </form>
                 <?php if (isset($loginError)) { echo '<p class="error">' . $loginError . '</p>'; } ?>
+			</div>
 
-                <h2>Inscription</h2>
-                <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
-                <input type="text" name="nom" placeholder="Nom" required><br>
+			<div class="login">
+            <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+					<label for="chk" aria-hidden="true">Login</label>
+                    <input type="text" name="nom" placeholder="Nom" required><br>
                 <input type="text" name="prenom" placeholder="Prénom" required><br>
                 <input type="email" name="email" placeholder="Email" required><br>
                 <input type="password" name="password" placeholder="Mot de passe" required><br>
                 <input type="submit" name="signup" value="S'inscrire">
             </form>
             <?php if (isset($signupError)) { echo '<p class="error">' . $signupError . '</p>'; } ?>
-        </div>
-    </div>
-</div>
-</div>
+			</div>
+	</div>
 </body>
-</html>     
-
-
+</html>
 
