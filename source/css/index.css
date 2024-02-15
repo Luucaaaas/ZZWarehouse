@@ -10,8 +10,10 @@
   .error {
 	color: red;
 	margin-top: 10px;
-	font-size: 14px;
+	font-size: 24px;
 	text-align: center;
+	transition: .8s ease-in-out;
+
   }
   
   .container {
@@ -27,10 +29,23 @@
 	left: 0;
 	width: 100%;
 	height: 100%;
-	background-image: url("source/img/bg.png");
+	background-image: url("../img/bg.png");
 	background-size: cover;
 	background-position: center;
   }
+  
+
+  .gsblogo {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	transition: .8s ease-in-out;
+}
+
+.gsblogo img {
+	width: 200px;
+	height: 150px;
+}
   
   .info-container {
 	position: fixed;
@@ -39,6 +54,7 @@
 	height: 100vh;
 	background-color: #f2f2f2;
 	padding: 40px;
+	padding-top: 2px;
   }
   
   input[type="text"],
@@ -89,6 +105,12 @@
 	overflow: hidden;
 	border-radius: 60px;
   }
+
+  .message {
+    font-size: 24px;
+    color: #2dbbff;
+    text-align: center;
+}
   
   #chk {
 	display: none;
@@ -109,6 +131,7 @@
 		justify-content: center;
 		display: flex;
 		margin: 60px;
+	    margin-top: 2px;
 		font-weight: bold;
 		cursor: pointer;
 		transition: .5s ease-in-out;
@@ -119,7 +142,7 @@
 	height: 460px;
 	background: #eee;
 	border-radius: 60% / 10%;
-	transform: translateY(-180px);
+	transform: translateY(-80px);
 	transition: .8s ease-in-out;
 }
   
@@ -129,7 +152,7 @@
   }
   
   #chk:checked ~ .login {
-	transform: translateY(-500px);
+	transform: translateY(-420px);
   }
   
   #chk:checked ~ .login label {
@@ -166,7 +189,7 @@
 	  margin: 0;
 	}
 	#chk:checked ~ .login {
-		transform: translateY(-260px);
+		transform: translateY(-220px);
 	  }
 
 	  #chk:checked ~ .login label {
