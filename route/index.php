@@ -60,15 +60,15 @@ $conn->close();
 <!DOCTYPE html>
 <html>
 <head>
-    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../source/css/index.css">
     <title>ZZWarehouse | Login</title>
-    <link rel="icon" href="../img/logogsbpetit.ico" type="image/x-icon">
+    <link rel="icon" href="../source/img/logogsbpetit.ico" type="image/x-icon">
 </head>
 <body>
 <div class="container">
     <div class="image-container"></div>
     <div class="info-container">
-        <div class="gsblogo"><a href="/BTS/index.php"><img src="../img/logogsb.png"></a></div>
+        <div class="gsblogo"><a href="../route/index.php"><img src="../source/img/logogsb.png"></a></div>
         <?php if (isset($message)) : ?><div class="message"><p><?php echo $message; ?></p></div><?php endif; ?>
         <?php if (isset($loginError)) { echo '<p class="error">' . $loginError . '</p>'; } ?>
         <?php if (isset($signupError)) { echo '<p class="error">' . $signupError . '</p>'; } ?>
