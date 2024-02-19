@@ -1,57 +1,78 @@
 <?php
-//connexion bdd
+// Connexion bdd
 require_once 'bdd.php';
 
-//utilisateur deja connecte ?
+$session_lifetime = 10; // tps en seconde
+
+session_set_cookie_params($session_lifetime);
+
+
+//déjà connecté ?
 session_start();
 if (isset($_SESSION['email'])) {
     header("Location: accueil.php");
     exit();
 }
 
-
-
-// Login
+// login
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
     $email = $_POST['email'];
     $password = $_POST['password'];
 
-    $sql = "SELECT * FROM utilisateurs WHERE email = '$email' AND mot_de_passe = '$password'";
-    $result = $conn->query($sql);
+    // requêtes préparées (injections SQL attention)
+    $stmt = $conn->prepare("SELECT * FROM utilisateurs WHERE email = ?");
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
     if ($result->num_rows == 1) {
-        $_SESSION['email'] = $email;
-        header("Location: accueil.php");
-        exit();
+        $user = $result->fetch_assoc();
+
+        // Verification du mdp
+        if (password_verify($password, $user['mot_de_passe'])) {
+            $_SESSION['email'] = $email;
+            session_regenerate_id();
+            header("Location: accueil.php");
+            exit();
+        } else {
+            $loginError = "Email ou mot de passe invalides";
+        }
     } else {
         $loginError = "Email ou mot de passe invalides";
     }
-}
 
-//inscription
+    $stmt->close();
+}
+// singup
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['signup'])) {
     $nom = $_POST['nom'];
     $prenom = $_POST['prenom'];
     $email = $_POST['email'];
     $password = $_POST['password'];
 
-    // Vérification de l'adresse e-mail existante
-    $existingEmailQuery = "SELECT COUNT(*) AS count FROM utilisateurs WHERE email = '$email'";
-    $existingEmailResult = $conn->query($existingEmailQuery);
+    // mail existant deja ?
+    $stmt = $conn->prepare("SELECT COUNT(*) AS count FROM utilisateurs WHERE email = ?");
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $row = $result->fetch_assoc();
+    $count = $row['count'];
 
-    if ($existingEmailResult) {
-        $row = $existingEmailResult->fetch_assoc();
-        $count = $row['count'];
+    if ($count > 0) {
+        $signupError = "Cette adresse e-mail <br> est déjà renseignée";
+    } else {
+        // Hashage mdp
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-        if ($count > 0) {
-            $signupError = "Cette adresse e-mail est déjà renseignée";
-        } else {
-            $insertQuery = "INSERT INTO utilisateurs (nom, prenom, email, mot_de_passe) VALUES ('$nom', '$prenom', '$email', '$password')";
-            if ($conn->query($insertQuery) === TRUE) {
-                $message = "L'utilisateur <br> $nom, $prenom <br> a été créé avec succès.";
-            }
+        // ajout utilisateur garce a la requette prepare 
+        $stmt = $conn->prepare("INSERT INTO utilisateurs (nom, prenom, email, mot_de_passe) VALUES (?, ?, ?, ?)");
+        $stmt->bind_param("ssss", $nom, $prenom, $email, $hashedPassword);
+        if ($stmt->execute()) {
+            $message = "L'utilisateur <br> $nom, $prenom <br> a été créé avec succès.";
         }
     }
+
+    $stmt->close();
 }
 
 $conn->close();
@@ -69,24 +90,26 @@ $conn->close();
     <div class="image-container"></div>
     <div class="info-container">
         <div class="gsblogo"><a href="../route/index.php"><img src="../source/img/logogsb.png"></a></div>
-        <?php if (isset($message)) : ?><div class="message"><p><?php echo $message; ?></p></div><?php endif; ?>
-        <?php if (isset($loginError)) { echo '<p class="error">' . $loginError . '</p>'; } ?>
-        <?php if (isset($signupError)) { echo '<p class="error">' . $signupError . '</p>'; } ?>
+        <?php if (isset($message)) { echo '<p class="message">' . htmlspecialchars_decode($message) . '</p>'; } ?>
+        <?php if (isset($loginError)) { echo '<p class="error">' . htmlspecialchars($loginError) . '</p>'; } ?>
+        <?php if (isset($signupError)) { echo '<p class="error">' . htmlspecialchars_decode($signupError) . '</p>'; } ?>
         <div class="main">
             <input type="checkbox" id="chk" aria-hidden="true">
 
-            <div class="signup">
-                <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
-                    <label for="chk" aria-hidden="true">Sign up</label>
+            <div class="login">
+                <form method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>">
+
+                <label for="chk" aria-hidden="true">Login</label>
                     <input type="email" name="email" placeholder="Email" required><br>
                     <input type="password" name="password" placeholder="Mot de passe" required><br>
+                  
                     <input type="submit" name="login" value="Se connecter">
                 </form>
             </div>
 
-            <div class="login">
-                <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
-                    <label for="chk" aria-hidden="true">Login</label>
+            <div class="signup">
+                <form method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>">
+                <label for="chk" aria-hidden="true">Sign up</label>
                     <input type="text" name="nom" placeholder="Nom" required><br>
                     <input type="text" name="prenom" placeholder="Prénom" required><br>
                     <input type="email" name="email" placeholder="Email" required><br>
@@ -96,5 +119,6 @@ $conn->close();
             </div>
         </div>
     </div>
+</div>
 </body>
 </html>
