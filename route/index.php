@@ -48,7 +48,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['signup'])) {
         } else {
             $insertQuery = "INSERT INTO utilisateurs (nom, prenom, email, mot_de_passe) VALUES ('$nom', '$prenom', '$email', '$password')";
             if ($conn->query($insertQuery) === TRUE) {
-                $message = "L'utilisateur $nom, $prenom a été créé avec succès.";
+                $message = "L'utilisateur <br> $nom, $prenom <br> a été créé avec succès.";
             }
         }
     }
