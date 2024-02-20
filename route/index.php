@@ -1,13 +1,14 @@
 <?php
-// Connexion bdd
-require_once 'bdd.php';
+// connexion a la bdd
+require_once 'Database.php';
 
-$session_lifetime = 10; // tps en seconde
+$database = new Database();
+
+$session_lifetime = 1800; // en secondes
 
 session_set_cookie_params($session_lifetime);
 
-
-//déjà connecté ?
+// deja connecte ?
 session_start();
 if (isset($_SESSION['email'])) {
     header("Location: accueil.php");
@@ -19,63 +20,55 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
     $email = $_POST['email'];
     $password = $_POST['password'];
 
-    // requêtes préparées (injections SQL attention)
-    $stmt = $conn->prepare("SELECT * FROM utilisateurs WHERE email = ?");
-    $stmt->bind_param("s", $email);
-    $stmt->execute();
-    $result = $stmt->get_result();
+    // requete preparée (injections SQL attention)
+    $sql = "SELECT * FROM utilisateurs WHERE email = :email";
+    $database->query($sql);
+    $database->bind(':email', $email);
+    $user = $database->single();
 
-    if ($result->num_rows == 1) {
-        $user = $result->fetch_assoc();
-
-        // Verification du mdp
-        if (password_verify($password, $user['mot_de_passe'])) {
-            $_SESSION['email'] = $email;
-            session_regenerate_id();
-            header("Location: accueil.php");
-            exit();
-        } else {
-            $loginError = "Email ou mot de passe invalides";
-        }
+    if ($database->rowCount() == 1 && password_verify($password, $user->mot_de_passe)) {
+        $_SESSION['email'] = $email;
+        session_regenerate_id();
+        header("Location: accueil.php");
+        exit();
     } else {
         $loginError = "Email ou mot de passe invalides";
     }
-
-    $stmt->close();
 }
-// singup
+
+// signup
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['signup'])) {
     $nom = $_POST['nom'];
     $prenom = $_POST['prenom'];
     $email = $_POST['email'];
     $password = $_POST['password'];
 
-    // mail existant deja ?
-    $stmt = $conn->prepare("SELECT COUNT(*) AS count FROM utilisateurs WHERE email = ?");
-    $stmt->bind_param("s", $email);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $row = $result->fetch_assoc();
-    $count = $row['count'];
+    // mail deja existant ?
+    $sql = "SELECT COUNT(*) AS count FROM utilisateurs WHERE email = :email";
+    $database->query($sql);
+    $database->bind(':email', $email);
+    $count = $database->single()->count;
 
     if ($count > 0) {
         $signupError = "Cette adresse e-mail <br> est déjà renseignée";
     } else {
-        // Hashage mdp
+        // hashage mdp
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-        // ajout utilisateur garce a la requette prepare 
-        $stmt = $conn->prepare("INSERT INTO utilisateurs (nom, prenom, email, mot_de_passe) VALUES (?, ?, ?, ?)");
-        $stmt->bind_param("ssss", $nom, $prenom, $email, $hashedPassword);
-        if ($stmt->execute()) {
+        // Ajout de l'utilisateur avec une requête préparée
+        $sql = "INSERT INTO utilisateurs (nom, prenom, email, mot_de_passe) VALUES (:nom, :prenom, :email, :password)";
+        $database->query($sql);
+        $database->bind(':nom', $nom);
+        $database->bind(':prenom', $prenom);
+        $database->bind(':email', $email);
+        $database->bind(':password', $hashedPassword);
+        if ($database->execute()) {
             $message = "L'utilisateur <br> $nom, $prenom <br> a été créé avec succès.";
         }
     }
-
-    $stmt->close();
 }
 
-$conn->close();
+$database = null;
 ?>
 
 <!DOCTYPE html>

@@ -1,28 +1,31 @@
 <?php
 session_start();
 
-//utilisateur deja connecte ?
+// deja connecte ?
 if (!isset($_SESSION['email'])) {
     header("Location: index.php");
     exit();
 }
 
-require_once 'bdd.php';
+require_once 'Database.php';
+
+$database = new Database();
 
 $email = $_SESSION['email'];
+// qui est login ?
+$sql = "SELECT nom, prenom FROM utilisateurs WHERE email = :email";
+$database->query($sql);
+$database->bind(':email', $email);
+$database->execute();
 
-$sql = "SELECT nom, prenom FROM utilisateurs WHERE email = '$email'";
-$result = $conn->query($sql);
-
-if ($result->num_rows == 1) {
-    $row = $result->fetch_assoc();
-    $nom = $row['nom'];
-    $prenom = $row['prenom'];
+if ($database->rowCount() == 1) {
+    $row = $database->single();
+    $nom = $row->nom;
+    $prenom = $row->prenom;
 } else {
     $nom = "?";
     $prenom = "???";
 }
-
 ?>
 
 
@@ -40,7 +43,7 @@ if ($result->num_rows == 1) {
     <li><a href="#"><img src="../source/img/commande.png" width="25" height="25"><br>Commande</a></li>
     <li><a href="#"><img src="../source/img/Role.png" width="25" height="25"><br>Rôle</a></li>
     <li><a href="#"><img src="../source/img/Stock.png" width="25" height="25"><br>Stock</a></li>
-    <li><a href="logout.php"><img src="../source/img/logout.png" width="25" height="25"><br><?php echo $prenom?></a></li>
+    <li><a href="z_logout.php"><img src="../source/img/logout.png" width="25" height="25"><br><?php echo $prenom?></a></li>
   </ul>
 </header>
 <body>  
