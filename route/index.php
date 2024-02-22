@@ -4,12 +4,13 @@ require_once 'Database.php';
 
 $database = new Database();
 
-$session_lifetime = 1800; // en secondes
+$session_lifetime = 70; // en secondes
 
 session_set_cookie_params($session_lifetime);
 
-// deja connecte ?
 session_start();
+
+// déjà connecté ?
 if (isset($_SESSION['email'])) {
     header("Location: accueil.php");
     exit();
@@ -26,13 +27,46 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
     $database->bind(':email', $email);
     $user = $database->single();
 
-    if ($database->rowCount() == 1 && password_verify($password, $user->mot_de_passe)) {
-        $_SESSION['email'] = $email;
-        session_regenerate_id();
-        header("Location: accueil.php");
-        exit();
+    if ($user && $user->blocked_until && $user->blocked_until > date('Y-m-d H:i:s')) {
+        $remainingTime = strtotime($user->blocked_until) - time();
+        $remainingTime = ($remainingTime > 0) ? gmdate('H:i:s', $remainingTime) : '00:00:00';
+        $loginError = "Trop de tentatives de connexion infructueuses. <br> 
+                        Votre compte est bloqué pendant encore <br> 
+                        $remainingTime. <br>
+                        Veuillez contacter votre administrateur";
     } else {
-        $loginError = "Email ou mot de passe invalides";
+        if ($user && password_verify($password, $user->mot_de_passe)) {
+            $_SESSION['email'] = $email;
+
+            // reset la valeur login_attempts a 0 si la connexion est réussi
+            $sql = "UPDATE utilisateurs SET login_attempts = 0 WHERE email = :email";
+            $database->query($sql);
+            $database->bind(':email', $email);
+            $database->execute();
+
+            session_regenerate_id();
+            header("Location: accueil.php");
+            exit();
+        } else {
+            if ($user && $user->login_attempts >= 10) {
+                $blockedUntil = date('Y-m-d H:i:s', strtotime('+20 minutes'));
+
+                $sql = "UPDATE utilisateurs SET login_attempts = 0, blocked_until = :blockedUntil WHERE email = :email";
+                $database->query($sql);
+                $database->bind(':blockedUntil', $blockedUntil);
+                $database->bind(':email', $email);
+                $database->execute();
+
+                $remainingTime = strtotime($blockedUntil) - time();
+                $remainingTime = ($remainingTime > 0) ? gmdate('H:i:s', $remainingTime) : '00:00:00';
+            } else {
+                $sql = "UPDATE utilisateurs SET login_attempts = login_attempts + 1 WHERE email = :email";
+                $database->query($sql);
+                $database->bind(':email', $email);
+                $database->execute();
+                $loginError = "Email ou mot de passe invalides";
+            }
+        }
     }
 }
 
@@ -43,20 +77,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['signup'])) {
     $email = $_POST['email'];
     $password = $_POST['password'];
 
-    // mail deja existant ?
+    // mail déjà existant ?
     $sql = "SELECT COUNT(*) AS count FROM utilisateurs WHERE email = :email";
     $database->query($sql);
     $database->bind(':email', $email);
     $count = $database->single()->count;
 
+    //mail deja utilisé
     if ($count > 0) {
         $signupError = "Cette adresse e-mail <br> est déjà renseignée";
     } else {
         // hashage mdp
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-        // Ajout de l'utilisateur avec une requête préparée
-        $sql = "INSERT INTO utilisateurs (nom, prenom, email, mot_de_passe) VALUES (:nom, :prenom, :email, :password)";
+        // ajout utilisateur avec requete preparée avec id_role a 2 car cela corespond a un utilisateur
+        $sql = "INSERT INTO utilisateurs (nom, prenom, email, mot_de_passe, id_role) VALUES (:nom, :prenom, :email, :password, 2)";
         $database->query($sql);
         $database->bind(':nom', $nom);
         $database->bind(':prenom', $prenom);
@@ -69,7 +104,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['signup'])) {
 }
 
 $database = null;
-?>
+?>     
 
 <!DOCTYPE html>
 <html>
@@ -83,9 +118,7 @@ $database = null;
     <div class="image-container"></div>
     <div class="info-container">
         <div class="gsblogo"><a href="../route/index.php"><img src="../source/img/logogsb.png"></a></div>
-        <?php if (isset($message)) { echo '<p class="message">' . htmlspecialchars_decode($message) . '</p>'; } ?>
-        <?php if (isset($loginError)) { echo '<p class="error">' . htmlspecialchars($loginError) . '</p>'; } ?>
-        <?php if (isset($signupError)) { echo '<p class="error">' . htmlspecialchars_decode($signupError) . '</p>'; } ?>
+
         <div class="main">
             <input type="checkbox" id="chk" aria-hidden="true">
 
@@ -98,6 +131,9 @@ $database = null;
                   
                     <input type="submit" name="login" value="Se connecter">
                 </form>
+                <?php if (isset($message)) { echo '<p class="message">' . htmlspecialchars_decode($message) . '</p>'; } ?>
+        <?php if (isset($loginError)) { echo '<p class="error">' . htmlspecialchars_decode($loginError) . '</p>'; } ?>
+        <?php if (isset($signupError)) { echo '<p class="error">' . htmlspecialchars_decode($signupError) . '</p>'; } ?>
             </div>
 
             <div class="signup">

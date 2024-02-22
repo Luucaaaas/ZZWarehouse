@@ -19,23 +19,13 @@ $database->query($sql);
 $database->bind(':email', $email);
 $database->execute();
 
-if ($database->rowCount() == 1) {
-    $row = $database->single();
-    $nom = $row->nom;
-    $prenom = $row->prenom;
-} else {
-    $nom = "?";
-    $prenom = "???";
-}
-
 ?>
-
 
 <!DOCTYPE html>
 <head>
     <link rel="icon" href="../source/img/logogsbpetit.ico" type="image/x-icon">
     <link rel="stylesheet" href="../source/css/accueil.css">
-    <title>ZZWarehouse | Accueil de <?php echo $prenom?></title>
+    <title>ZZWarehouse | Rôle</title>
 </head>
 <header class="header">
   <a href="../route/accueil.php" class="logo"><img src="../source/img/logogsbpetit.ico."width="50" height="50"><span>Accueil</span><a href="../route/index.php"></a></a>
@@ -49,6 +39,6 @@ if ($database->rowCount() == 1) {
   </ul>
 </header>
 <body>  
-<?php echo "Bonjour, $prenom $nom !"; ?><br>
+<?php echo "Bonjour, !"; ?><br>
 </body>
 </html

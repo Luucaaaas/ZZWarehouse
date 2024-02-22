@@ -1,6 +1,6 @@
 @font-face {
 	font-family: 'NewsGothicCondensed';
-	src: url('source/font/NewsGothicCondensed.ttf');
+	src: url('../font/NewsGothicCondensed.ttf');
   }
   
   body {
