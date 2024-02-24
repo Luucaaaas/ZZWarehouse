@@ -1,4 +1,9 @@
 <?php
+
+require_once 'Database.php';
+
+$database = new Database();
+
 session_start();
 
 // utilisateur login ? 
@@ -8,9 +13,34 @@ if (!isset($_SESSION['email'])) {
   exit();
 }
 
-require_once 'Database.php';
+if (isset($_SESSION['email'])) {
+  $session_duration = 1800 ; // Durée de la session en secondes
+  $current_time = time();
+  $login_time = $_SESSION['login_time'];
 
-$database = new Database();
+  $session_time_remaining = $session_duration - ($current_time - $login_time);
+
+  if ($session_time_remaining <= 0) {
+    // redirection quand le temps de session vers le code pour "detruire la session"
+    header("Location: z_logout.php");
+      exit();
+  }
+
+  // temps de seesion sera supprime je pense lors de la version final du projet 
+  $hours_remaining = floor($session_time_remaining / 3600);
+  $minutes_remaining = floor(($session_time_remaining % 3600) / 60);
+  $seconds_remaining = $session_time_remaining % 60;
+
+  $time_remaining = "Temps de session restant : 
+                    " . $hours_remaining . 
+                    " heures, " . 
+                    $minutes_remaining . 
+                    " minutes, " . 
+                    $seconds_remaining . 
+                    " secondes";
+}
+
+
 
 $email = $_SESSION['email'];
 // qui est login ?
@@ -19,6 +49,14 @@ $database->query($sql);
 $database->bind(':email', $email);
 $database->execute();
 
+if ($database->rowCount() == 1) {
+    $row = $database->single();
+    $nom = $row->nom;
+    $prenom = $row->prenom;
+} else {
+    $nom = "?";
+    $prenom = "???";
+}
 ?>
 
 <!DOCTYPE html>
@@ -39,6 +77,8 @@ $database->execute();
   </ul>
 </header>
 <body>  
-<?php echo "Bonjour, !"; ?><br>
+<?php echo "Bonjour, $prenom $nom !"; ?><br>
+<?php echo $time_remaining ?><br>
+
 </body>
 </html

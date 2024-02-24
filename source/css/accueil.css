@@ -12,10 +12,11 @@
   
   a {
     color: #2DBBFF;
+    cursor: pointer;
   }
 
   .header {
-    background-color: #f2f2f2;
+    background-color: #dedede;
     position: relative;
     overflow: hidden;
     box-shadow: -8px -2px 20px 0px #000000
@@ -27,7 +28,7 @@
       padding: 0;
       list-style: none;
       overflow: hidden;
-      background-color: #f2f2f2;
+      background-color: #dedede;
     }
     
     .header li a {
@@ -38,7 +39,7 @@
     
     .header li a:hover,
     .header .menu-btn:hover {
-      background-color: #333;
+      background-color: #333333;
     }
     
     .header .logo {
@@ -144,3 +145,59 @@
     }
   }
   
+  .site-footer
+{
+  background-color: #dedede;
+  padding:45px 0 20px;
+  font-size:15px;
+  line-height:24px;
+  color:#737373;
+  text-align:center
+
+}
+
+hr.custom {
+  border: 0;
+  height: 2px;
+  background-image: linear-gradient(to right, #333333, #2DBBFF, #2DBBFF, #333333);
+}
+
+hr.custom::after {
+  content: 'ZZWarehouse';
+  display: inline-block;
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transform-origin: 50% 50%;
+  padding: 3px;
+  background-color: #dedede;
+}
+
+.site-footer .social-icons a
+{
+  width:50px;
+  height:50px;
+  margin-left:6px;
+  background-color:#333333
+}
+
+.social-icons
+{
+  padding-left:0;
+  margin-bottom:0;
+}
+
+
+.social-icons a{
+  display:inline-block;
+  border-radius:100%;
+  -webkit-transition:all .2s linear;
+  -o-transition:all .2s linear;
+  transition:all .2s linear;
+}
+
+.social-icons a.github:hover
+{
+  background-color: white
+}
+

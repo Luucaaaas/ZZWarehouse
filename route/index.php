@@ -4,10 +4,6 @@ require_once 'Database.php';
 
 $database = new Database();
 
-$session_lifetime = 70; // en secondes
-
-session_set_cookie_params($session_lifetime);
-
 session_start();
 
 // déjà connecté ?
@@ -33,10 +29,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
         $loginError = "Trop de tentatives de connexion infructueuses. <br> 
                         Votre compte est bloqué pendant encore <br> 
                         $remainingTime. <br>
-                        Veuillez contacter votre administrateur";
+                        Veuillez contacter votre administrateur"; // msg d'erreur lors du 10eme mauvais mot de passe renseigner  
     } else {
         if ($user && password_verify($password, $user->mot_de_passe)) {
             $_SESSION['email'] = $email;
+            
+            // Initialise $_SESSION['login_time'] lors de la connexion réussie
+            $_SESSION['login_time'] = time();
 
             // reset la valeur login_attempts a 0 si la connexion est réussi
             $sql = "UPDATE utilisateurs SET login_attempts = 0 WHERE email = :email";
@@ -59,7 +58,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
 
                 $remainingTime = strtotime($blockedUntil) - time();
                 $remainingTime = ($remainingTime > 0) ? gmdate('H:i:s', $remainingTime) : '00:00:00';
+                $loginError = "Trop de tentatives de connexion infructueuses. <br>
+                                Votre compte est bloqué pendant encore <br> 
+                                $remainingTime. <br>
+                                Veuillez contacter votre administrateur"; // message quand le compte est deja bloquer 
             } else {
+                // si le mot de passe est faux
                 $sql = "UPDATE utilisateurs SET login_attempts = login_attempts + 1 WHERE email = :email";
                 $database->query($sql);
                 $database->bind(':email', $email);

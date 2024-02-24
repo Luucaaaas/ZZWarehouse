@@ -1,4 +1,9 @@
 <?php
+
+require_once 'Database.php';
+
+$database = new Database();
+
 session_start();
 
 // utilisateur login ? 
@@ -8,9 +13,34 @@ if (!isset($_SESSION['email'])) {
   exit();
 }
 
-require_once 'Database.php';
+if (isset($_SESSION['email'])) {
+  $session_duration = 1800; // en secondes
+  $current_time = time();
+  $login_time = $_SESSION['login_time'];
 
-$database = new Database();
+  $session_time_remaining = $session_duration - ($current_time - $login_time);
+
+  if ($session_time_remaining <= 0) {
+    // redirection quand le temps de session n'est plus valide vers le code pour "detruire la session" 
+    header("Location: z_logout.php");
+      exit();
+  }
+
+  // temps de seesion sera supprime je pense lors de la version final du projet 
+  $hours_remaining = floor($session_time_remaining / 3600);
+  $minutes_remaining = floor(($session_time_remaining % 3600) / 60);
+  $seconds_remaining = $session_time_remaining % 60;
+
+  $time_remaining = "Temps de session restant : 
+                    " . $hours_remaining . 
+                    " heures, " . 
+                    $minutes_remaining . 
+                    " minutes, " . 
+                    $seconds_remaining . 
+                    " secondes";
+}
+
+
 
 $email = $_SESSION['email'];
 // qui est login ?
@@ -27,7 +57,6 @@ if ($database->rowCount() == 1) {
     $nom = "?";
     $prenom = "???";
 }
-
 ?>
 
 
@@ -50,5 +79,25 @@ if ($database->rowCount() == 1) {
 </header>
 <body>  
 <?php echo "Bonjour, $prenom $nom !"; ?><br>
+<?php echo $time_remaining ?>     
+ <form action="z_reset_session.php" method="POST">
+        <button type="submit" name="reset">Réinitialiser le temps de session</button>
+    </form>
 </body>
+<footer>
+<footer class="site-footer">
+      <div class="container">
+        <hr class="custom"/>
+      <div class="container">
+        <div class="row">
+            <p class="copyright-text">Copyright © ZZWarehouse 2024.</p>
+          </div>
+            <div class="social-icons">
+              <a class="github" href="https://github.com/Luucaaaas/ZZWarehouse" target="_blank"><img src="../source/img/github.png"width="50" height="50"></a>
+            </div>
+          </div>
+        </div>
+      </div>
+</footer>
+</footer>
 </html
