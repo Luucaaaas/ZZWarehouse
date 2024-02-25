@@ -1,14 +1,7 @@
 <?php
-
 require_once 'Database.php';
-
-$database = new Database();
-
-session_start();
-
 require_once 'z_int.php'
 ?>
-
 
 <!DOCTYPE html>
 <head>

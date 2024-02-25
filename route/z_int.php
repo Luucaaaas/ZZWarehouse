@@ -1,8 +1,13 @@
 <?php
+
+$database = new Database();
+
+session_start();
+
 // utilisateur login ? 
 if (!isset($_SESSION['email'])) {
   //redirection sur la page de login si l utilisateur n'est pas connecte 
-  header("Location: index.php");
+  header("Location: p_index.php");
   exit();
 }
 
@@ -52,4 +57,3 @@ if ($database->rowCount() == 1) {
     $prenom = "???";
     $id_role = "";
 }
-?>
