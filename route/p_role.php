@@ -13,6 +13,18 @@ if (!isset($_SESSION['email'])) {
   exit();
 }
 
+// role l'utilisateur ?
+$role = $_SESSION['role'];
+
+// Vérifier si l'utilisateur n'a pas le rôle d'administrateur
+if ($role != 'admin') {
+    // Redirection vers la page d'accueil si l'utilisateur n'a pas le rôle d'administrateur
+    header("Location: accueil.php");
+    exit();
+}
+
+
+
 if (isset($_SESSION['email'])) {
   $session_duration = 1800 ; // Durée de la session en secondes
   $current_time = time();
@@ -43,8 +55,8 @@ if (isset($_SESSION['email'])) {
 
 
 $email = $_SESSION['email'];
-// qui est login ?
-$sql = "SELECT nom, prenom FROM utilisateurs WHERE email = :email";
+// qui est login avec quelle role ?
+$sql = "SELECT nom, prenom, id_role FROM utilisateurs WHERE email = :email";
 $database->query($sql);
 $database->bind(':email', $email);
 $database->execute();
@@ -53,16 +65,18 @@ if ($database->rowCount() == 1) {
     $row = $database->single();
     $nom = $row->nom;
     $prenom = $row->prenom;
+    $id_role = $row->id_role;
 } else {
     $nom = "?";
     $prenom = "???";
+    $id_role = "";
 }
 ?>
 
 <!DOCTYPE html>
 <head>
     <link rel="icon" href="../source/img/logogsbpetit.ico" type="image/x-icon">
-    <link rel="stylesheet" href="../source/css/accueil.css">
+    <link rel="stylesheet" href="../source/css/app.css">
     <title>ZZWarehouse | Rôle</title>
 </head>
 <header class="header">
@@ -70,15 +84,24 @@ if ($database->rowCount() == 1) {
   <input class="menu-btn" type="checkbox" id="menu-btn" />
   <label class="menu-icon" for="menu-btn"><span class="navicon"></span></label>
   <ul class="menu">
-    <li><a href="#"><img src="../source/img/commande.png" width="25" height="25"><br>Commande</a></li>
     <li><a href="role.php"><img src="../source/img/Role.png" width="25" height="25"><br>Rôle</a></li>
-    <li><a href="#"><img src="../source/img/Stock.png" width="25" height="25"><br>Stock</a></li>
+    <li><a href="commande.php"><img src="../source/img/commande.png" width="25" height="25"><br>Commande</a></li>
+    <li><a href="stock.php"><img src="../source/img/Stock.png" width="25" height="25"><br>Stock</a></li>
     <li><a href="z_logout.php"><img src="../source/img/logout.png" width="25" height="25"><br>Se déconnecter</a></li>
   </ul>
 </header>
 <body>  
 <?php echo "Bonjour, $prenom $nom !"; ?><br>
 <?php echo $time_remaining ?><br>
-
+<form action="z_reset_session.php" method="POST">
+        <button type="submit" name="reset">Réinitialiser le temps de session</button>
+    </form>
 </body>
+<footer class="site-footer">
+  <hr class="custom"/>
+  <p class="copyright-text">Copyright © 2024</p>
+  <div class="social-icons">
+    <a class="github" href="https://github.com/Luucaaaas/ZZWarehouse" target="_blank"><img src="../source/img/github.png"width="50" height="50"></a>
+  </div>
+</footer>
 </html

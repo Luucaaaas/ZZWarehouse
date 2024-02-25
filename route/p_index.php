@@ -8,7 +8,7 @@ session_start();
 
 // déjà connecté ?
 if (isset($_SESSION['email'])) {
-    header("Location: accueil.php");
+    header("Location: p_accueil.php");
     exit();
 }
 
@@ -44,7 +44,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
             $database->execute();
 
             session_regenerate_id();
-            header("Location: accueil.php");
+            header("Location: p_accueil.php");
             exit();
         } else {
             if ($user && $user->login_attempts >= 10) {
