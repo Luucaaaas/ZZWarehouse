@@ -41,12 +41,17 @@ if (isset($_SESSION['confirmation_message'])) {
         <?php include("zz_header.html"); ?>
     </header>
 
-    <h1>Stock</h1>
+    <div class=container-titre>
+        <div class=trois></div>
+        <div class=trois><h1>Stock</h1></div>
+        <div class=trois><?php if ($id_role == '1') : ?><a href="p_add_stock.php" class="btn-add-stock">➕Ajouter un stock</a><?php endif; ?></div>
+    </div>
+
     <?php if (!empty($message)) : ?><p class="message"><?php echo $message; ?></p><?php endif; ?>
     <?php if (isset($confirmationMessage)) { echo '<p class="message">' . htmlspecialchars_decode($confirmationMessage) . '</p>'; } ?>
     <?php if (isset($errorMessage)) { echo '<p class="message">' . htmlspecialchars_decode($errorMessage) . '</p>'; } ?>
+    <?php if (isset($messageAdd)) { echo '<p class="confirmation-message">' . htmlspecialchars_decode($messageAdd) . '</p>'; } ?>
 
-    
 
     <table>
         <tr>
