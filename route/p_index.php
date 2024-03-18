@@ -1,10 +1,12 @@
 <?php
+
+session_start();
+
 // connexion a la bdd
 require_once 'Database.php';
 
 $database = new Database();
 
-session_start();
 
 // déjà connecté ?
 if (isset($_SESSION['email'])) {

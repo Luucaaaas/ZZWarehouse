@@ -1,6 +1,8 @@
 <?php
-require_once 'Database.php';
+
 session_start();
+
+require_once 'Database.php';
 
 $database = new Database();
 

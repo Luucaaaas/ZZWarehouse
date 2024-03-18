@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 require_once 'Database.php';
 require_once 'z_int.php';
 

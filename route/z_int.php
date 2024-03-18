@@ -1,8 +1,7 @@
 <?php
+require_once 'Database.php';
 
 $database = new Database();
-
-session_start();
 
 // utilisateur login ? 
 if (!isset($_SESSION['email'])) {

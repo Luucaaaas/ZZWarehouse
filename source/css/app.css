@@ -202,12 +202,22 @@ hr.custom::after {
   background-color: white
 }
 
+.error-message {
+  background-color: #f0d8d8;
+  border: 1px solid #e9c6c6;
+  color: #763c3c;
+  padding: 10px;
+  margin-bottom: 10px;
+  font-size: 24px;
+}
+
 .confirmation-message {
   background-color: #dff0d8;
   border: 1px solid #d6e9c6;
   color: #3c763d;
   padding: 10px;
   margin-bottom: 10px;
+  font-size: 24px;
 }
 
 table {
@@ -242,7 +252,7 @@ table th {
   text-transform: uppercase;
 }
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 897px) {
   table {
     border: 0;
   }
@@ -276,10 +286,6 @@ table th {
   }
   
   table td::before {
-    /*
-    * aria-label has no advantage, it won't be read inside a table
-    content: attr(aria-label);
-    */
     content: attr(data-label);
     float: left;
     font-weight: bold;
@@ -289,4 +295,98 @@ table th {
   table td:last-child {
     border-bottom: 0;
   }
+}
+
+.stock-form {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+  border: 2px solid #2DBBFF;
+  border-radius: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stock-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+.stock-label {
+  flex-basis: 30%;
+  font-weight: bold;
+  margin-bottom: 5px;
+  font-size: 20px;
+}
+
+.stock-textarea {
+  flex-basis: 65%;
+  padding: 8px;
+  border: 2px solid #2DBBFF;
+  border-radius: 20px;
+  margin-bottom: 10px;
+}
+
+.stock-input {
+  flex-basis: 65%;
+  padding: 8px;
+  border: 2px solid #2DBBFF;
+  border-radius: 20px;
+  margin-bottom: 10px;
+}
+
+.stock-select  {
+  flex-basis: 65%;
+  padding: 8px;
+  border: 2px solid #2DBBFF;
+  border-radius: 20px;
+  margin-bottom: 10px;
+}
+
+.button-container {
+  display: flex;
+  margin-top: 20px;
+  width: 100%;
+  justify-content: center;
+}
+
+.stock-button {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+.stock-button:hover {
+  background-color: #a5d7a7;
+}
+
+
+.cancel-button {
+  background-color: #FF0000;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  border-radius: 20px;
+  cursor: pointer;  
+  margin-right: 10px;
+}
+
+.cancel-button:hover {
+  background-color: #ff7f7f;
 }
