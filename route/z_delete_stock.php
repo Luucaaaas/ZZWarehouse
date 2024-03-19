@@ -8,7 +8,7 @@ $database = new Database();
 
 //verif requete si la requête est une requete POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Vérifier si l'ID du stock a été transmis
+    // id du stock transmis 
     if (isset($_POST['id_stock'])) {
         $idStock = $_POST['id_stock'];
         // requete pour suppr dans la base

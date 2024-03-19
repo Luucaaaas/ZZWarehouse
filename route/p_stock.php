@@ -45,57 +45,61 @@ if (isset($_SESSION['confirmation_message'])) {
         <div class=trois></div>
         <div class=trois><h1>Stock</h1></div>
         <div class=trois><?php if ($id_role == '1') : ?><a href="p_add_stock.php" class="btn-add-stock">➕Ajouter un stock</a><?php endif; ?></div>
-    </div>
+        </div>
 
-    <?php if (!empty($message)) : ?><p class="message"><?php echo $message; ?></p><?php endif; ?>
-    <?php if (isset($confirmationMessage)) { echo '<p class="message">' . htmlspecialchars_decode($confirmationMessage) . '</p>'; } ?>
-    <?php if (isset($errorMessage)) { echo '<p class="message">' . htmlspecialchars_decode($errorMessage) . '</p>'; } ?>
-    <?php if (isset($messageAdd)) { echo '<p class="confirmation-message">' . htmlspecialchars_decode($messageAdd) . '</p>'; } ?>
+        <?php if (!empty($message)) : ?><p class="message"><?php echo $message; ?></p><?php endif; ?>
+        <?php if (isset($confirmationMessage)) { echo '<p class="message">' . htmlspecialchars_decode($confirmationMessage) . '</p>'; } ?>
+        <?php if (isset($errorMessage)) { echo '<p class="message">' . htmlspecialchars_decode($errorMessage) . '</p>'; } ?>
+        <?php if (isset($messageAdd)) { echo '<p class="confirmation-message">' . htmlspecialchars_decode($messageAdd) . '</p>'; } ?>
 
 
-    <table>
-        <tr>
-            <th>ID</th>
-            <th>Nom</th>
-            <th>Description</th>
-            <th>Quantité disponible</th>
-            <th>Type</th>
-            <?php if ($id_role == '1') : ?><th>Modifier</th><?php endif; ?>
-            <?php if ($id_role == '1') : ?><th>Supprimer</th><?php endif; ?>
-        </tr>
-        <?php foreach ($stocks as $item) { ?>
-            <tr>
-                <td><?php echo $item->id_stock; ?></td>
-                <td class="product-name" data-description="<?php echo $item->description; ?>"><?php echo $item->nom; ?></td>
-                <td><?php echo $item->description; ?></td>
-                <td><?php echo $item->quantite_disponible; ?></td>
-                <td><?php echo $item->type; ?></td>
-                <?php if ($id_role == '1') : ?><td>
-                    <form action="p_edit_stock.php" method="get">
-                        <input type="hidden" name="id_stock" value="<?php echo $item->id_stock; ?>">
-                        <button type="submit">🖊️</button>
-                    </form>
-                </td><?php endif; ?>
-                <?php if ($id_role == '1') : ?><td>
-                    <form id="delete-form-<?php echo $item->id_stock; ?>" action="z_delete.php" method="post">
-                        <input type="hidden" name="id_stock" value="<?php echo $item->id_stock; ?>">
-                        <button type="button" onclick="showConfirmation(<?php echo $item->id_stock; ?>, '<?php echo addslashes($item->nom); ?>')">🗑️</button>
-                    </form>
-                </td><?php endif; ?>
-            </tr>
-        <?php } ?>
-    </table>
-    <script>
-        // Popup de confirmation
-        function showConfirmation(idStock, productName) {
-            if (confirm("Êtes-vous sûr de vouloir supprimer le produit \"" + productName + "\" ?")) {
-                // Si "OK" est sélectionné, alors supprimer
-                document.getElementById('delete-form-' + idStock).submit();
-            }
-        }
-    </script>
-    <footer class="site-footer">
-        <?php include("zz_footer.html"); ?>
-    </footer>
+        <table>
+            <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Nom</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Quantité disponible</th>
+                    <th scope="col">Type</th>
+                    <?php if ($id_role == '1') : ?><th scope="col">Modifier</th><?php endif; ?>
+                    <?php if ($id_role == '1') : ?><th scope="col">Supprimer</th><?php endif; ?>
+                </tr>
+                <thead>
+                    <tbody>
+                        <?php foreach ($stocks as $item) { ?>
+                            <tr>
+                                <td data-label="ID"><?php echo $item->id_stock; ?></td>
+                                <td data-label="Nom"><?php echo $item->nom; ?></td>
+                                <td data-label="Description"><?php echo $item->description; ?></td>
+                                <td data-label="Quantité disponible"><?php echo $item->quantite_disponible; ?></td>
+                                <td data-label="Type"><?php echo $item->type; ?></td>
+                                <?php if ($id_role == '1') : ?><td data-label="Modifier">
+                                    <form action="p_edit_stock.php" method="get">
+                                        <input type="hidden" name="id_stock" value="<?php echo $item->id_stock; ?>">
+                                        <button type="submit">🖊️</button>
+                                    </form>
+                                </td><?php endif; ?>
+                                <?php if ($id_role == '1') : ?><td data-label="Supprimer">
+                                    <form id="delete-form-<?php echo $item->id_stock; ?>" action="z_delete_stock.php" method="post">
+                                    <input type="hidden" name="id_stock" value="<?php echo $item->id_stock; ?>">
+                                    <button type="button" onclick="showConfirmation(<?php echo $item->id_stock; ?>, '<?php echo addslashes($item->nom); ?>')">🗑️</button>
+                                </form>
+                            </td><?php endif; ?>
+                        </tr>
+                        <?php } ?>
+                    </tbody>
+                </table>
+                <script>
+                // Popup de confirmation
+                function showConfirmation(idStock, productName) {
+                    if (confirm("Êtes-vous sûr de vouloir supprimer le produit \"" + productName + "\" ?")) {
+                        // Si "OK" est sélectionné, alors supprimer
+                        document.getElementById('delete-form-' + idStock).submit();
+                    }
+                }
+                </script>
+                <footer class="site-footer">
+                    <?php include("zz_footer.html"); ?>
+                </footer>
 </body>
 </html>

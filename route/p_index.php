@@ -123,7 +123,7 @@ $database = null;
 <div class="container">
     <div class="image-container"></div>
     <div class="info-container">
-        <div class="gsblogo"><a href="../route/index.php"><img src="../source/img/logogsb.png"></a></div>
+        <div class="gsblogo"><a href="../route/p_index.php"><img src="../source/img/logogsb.png"></a></div>
 
         <div class="main">
             <input type="checkbox" id="chk" aria-hidden="true">

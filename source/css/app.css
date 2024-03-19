@@ -402,7 +402,9 @@ table th {
 }
 
 .btn-add-stock {
-  margin-left: 300px;
+  /* transform: translateX(40%); */
+  margin-left: 10vw;
+  margin-right: -1vw;
   display: inline-block;
   padding: 10px 20px;
   background-color: #4CAF50;
@@ -411,10 +413,49 @@ table th {
   border-radius: 4px;
 }
 
+
+
 .btn-add-stock:hover {
   background-color: #a5d7a7;
 }
 
 .trois {
   width: 33%;
+}
+
+.menu-deroulant {
+  flex-basis: 65%;
+  padding: 8px;
+  border: 2px solid #2DBBFF;
+  border-radius: 20px;
+  margin-bottom: 10px;
+}
+
+.page-role button[type="submit"] {
+  flex-basis: 65%;
+  padding: 8px;
+  border: 2px solid #2DBBFF;
+  border-radius: 20px;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.page-role select[name="id_role"] {
+  padding: 8px;
+  border: 2px solid #2DBBFF;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+
+select[name="id_role"]:focus {
+  background-color: #F0F0F0; 
+  color: #000000; 
+  outline: none;
+}
+
+select[name="id_role"] option {
+  background-color: #dedede;
+  color: #2DBBFF;
+
 }
