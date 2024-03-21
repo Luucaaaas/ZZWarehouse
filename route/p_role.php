@@ -56,9 +56,9 @@ $utilisateurs = $database->resultSet();
                     ID
                     <?php if ($column === 'id_utilisateur') { ?>
                         <?php if ($order === 'asc') { ?>
-                            <img src="../source/img/fleche-haut.png" width="10" height="10" alt="haut">
+                            <img src="../source/img/fleche-haut.png" width="30" height="30" alt="haut">
                         <?php } else { ?>
-                            <img src="../source/img/fleche-bas.png" width="10" height="10" alt="bas">           
+                            <img src="../source/img/fleche-bas.png" width="30" height="30" alt="bas">           
                         <?php } ?>
                     <?php } ?>
                 </button>
@@ -71,9 +71,9 @@ $utilisateurs = $database->resultSet();
                     Utilisateur
                     <?php if ($column === 'nom') { ?>
                         <?php if ($order === 'asc') { ?>
-                            <img src="../source/img/fleche-haut.png" width="10" height="10" alt="haut">
+                            <img src="../source/img/fleche-haut.png" width="30" height="30" alt="haut">
                         <?php } else { ?>
-                            <img src="../source/img/fleche-bas.png" width="10" height="10" alt="bas">           
+                            <img src="../source/img/fleche-bas.png" width="30" height="30" alt="bas">           
                         <?php } ?>
                     <?php } ?>
                 </button>
@@ -86,9 +86,9 @@ $utilisateurs = $database->resultSet();
                     Email
                     <?php if ($column === 'email') { ?>
                         <?php if ($order === 'asc') { ?>
-                            <img src="../source/img/fleche-haut.png" width="10" height="10" alt="haut">
+                            <img src="../source/img/fleche-haut.png" width="30" height="30" alt="haut">
                         <?php } else { ?>
-                            <img src="../source/img/fleche-bas.png" width="10" height="10" alt="bas">           
+                            <img src="../source/img/fleche-bas.png" width="30" height="30" alt="bas">           
                         <?php } ?>
                     <?php } ?>
                 </button>
@@ -101,9 +101,9 @@ $utilisateurs = $database->resultSet();
                     Role
                     <?php if ($column === 'id_role') { ?>
                         <?php if ($order === 'asc') { ?>
-                            <img src="../source/img/fleche-haut.png" width="10" height="10" alt="haut">
+                            <img src="../source/img/fleche-haut.png" width="30" height="30" alt="haut">
                         <?php } else { ?>
-                            <img src="../source/img/fleche-bas.png" width="10" height="10" alt="bas">           
+                            <img src="../source/img/fleche-bas.png" width="30" height="30" alt="bas">           
                         <?php } ?>
                     <?php } ?>
                 </button>
@@ -127,6 +127,8 @@ $utilisateurs = $database->resultSet();
                         <img src="../source/img/utilisateur.png" width="50" height="50" alt="user">
                     <?php } elseif ($utilisateur->id_role == 3) { ?>
                         <img src="../source/img/client.png" width="50" height="50" alt="client">
+                    <?php } elseif ($utilisateur->id_role == 4) { ?>
+                        <img src="../source/img/fournisseur.png" width="50" height="50" alt="fournisseur">
                     <?php } ?>
                     <div class="flex-container">
                         <br>
