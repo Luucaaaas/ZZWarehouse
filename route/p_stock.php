@@ -44,7 +44,7 @@ if (isset($_SESSION['confirmation_message'])) {
     <div class=container-titre>
         <div class=trois></div>
         <div class=trois><h1>Stock</h1></div>
-        <div class=trois><?php if ($id_role == '1') : ?><a href="p_add_stock.php" class="btn-add-stock">➕Ajouter un stock</a><?php endif; ?></div>
+        <div class=trois><?php if ($id_role == '1') : ?><a href="p_add_stock.php" class="btn-add">➕Ajouter un stock</a><?php endif; ?></div>
         </div>
 
         <?php if (!empty($message)) : ?><p class="message"><?php echo $message; ?></p><?php endif; ?>
