@@ -5,21 +5,36 @@ require_once 'z_int.php';
 
 $database = new Database();
 
-// Récupérer les commandes
-$database->query("SELECT * FROM commandes");
+$database->query("SELECT c.id_commande, u.nom AS nom_utilisateur, s.nom AS nom_produit, c.quantite, c.type_mouvement, c.date_commande, c.statut FROM commandes c
+                  JOIN utilisateurs u ON c.id_utilisateur = u.id_utilisateur
+                  JOIN stocks s ON c.id_stock = s.id_stock");
 $commandes = $database->resultSet();
 
-// Récupérer les utilisateurs
-$database->query("SELECT * FROM utilisateurs");
-$utilisateurs = $database->resultSet();
 
-// Récupérer les mouvements
-$database->query("SELECT * FROM mouvements");
-$mouvements = $database->resultSet();
+if (isset($_POST['valider_commande'])) {
+    $commande_id = $_POST['commande_id'];
 
-// Récupérer les stocks
-$database->query("SELECT * FROM stocks");
-$stocks = $database->resultSet();
+    $database->query("UPDATE commandes SET statut = 'validee' WHERE id_commande = :commande_id");
+    $database->bind(':commande_id', $commande_id);
+    $database->execute();
+
+    $_SESSION['messageCommande'] = 'Le statut de la commande a été mis à jour.';
+} elseif (isset($_POST['invalider_commande'])) {
+    $commande_id = $_POST['commande_id'];
+
+    $database->query("UPDATE commandes SET statut = 'invalidée' WHERE id_commande = :commande_id");
+    $database->bind(':commande_id', $commande_id);
+    $database->execute();
+
+    $_SESSION['messageCommande'] = 'Le statut de la commande a été mis à jour.';
+}
+
+if (isset($_SESSION['messageCommande'])) {
+    $messageCommande = $_SESSION['messageCommande'];
+    unset($_SESSION['messageCommande']);
+}
+
+
 ?>
 
 <!DOCTYPE html>
@@ -36,76 +51,65 @@ $stocks = $database->resultSet();
 
     <div class="container-titre">
         <div class="trois"></div>
-        <div class="trois">
-            <h1>Commande</h1>
-        </div>
+        <div class="trois"><h1>Commande</h1></div>
         <div class="trois">
             <?php if ($id_role == '1') : ?>
                 <a href="p_add_commande.php" class="btn-add">➕Ajouter une Commande</a>
             <?php endif; ?>
         </div>
     </div>
+    <?php if (isset($messageCommande)) { echo '<p class="confirmation-message">' . htmlspecialchars_decode($messageCommande) . '</p>'; } ?>
+    
 
-    <table>
-        <thead>
-            <tr>
-                <th scope="col">ID</th>
-                <th scope="col">Utilisateur</th>
-                <th scope="col">Produit</th>
-                <th scope="col">Quantite</th>
-                <th scope="col">Mouvement</th>
-                <th scope="col">Date</th>
-                <th scope="col">Statut</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($commandes as $commande) :
-                $utilisateur = "";
-                foreach ($utilisateurs as $u) {
-                    if ($u->id_utilisateur === $commande->id_utilisateur) {
-                        $utilisateur = $u;
-                        break;
-                    }
-                }
-
-                $mouvement = "";
-                foreach ($mouvements as $m) {
-                    if ($m->id_commande === $commande->id_commande) {
-                        $mouvement = $m;
-                        break;
-                    }
-                }
-
-                $stock = "";
-                foreach ($stocks as $s) {
-                    if ($s->id_stock === $mouvement->id_stock) {
-                        $stock = $s;
-                        break;
-                    }
-                }
-                ?>
+        <table>
+            <thead>
                 <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Utilisateur</th>
+                    <th scope="col">Produit</th>
+                    <th scope="col">Quantite</th>
+                    <th scope="col">Mouvement</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Statut</th>
+                </tr>
+            </thead>
+            <tbody>
+        <?php foreach ($commandes as $commande) : ?>
+            <tr>
                 <td data-label="ID"><?php echo $commande->id_commande; ?></td>
-                <td data-label="Utilisateur"><?php echo $utilisateur->prenom . ' ' . $utilisateur->nom; ?></td>
-                <td data-label="Produit"><?php echo $stock->nom; ?></td>
-                <td data-label="Quantité Mouvement"><?php echo $mouvement->quantite; ?></td>
-                <td>
-                    <?php
-                        if ($mouvement->type_mouvement === 'Entree') {
+                <td data-label="Utilisateur"><?php echo $commande->nom_utilisateur; ?></td>
+                <td data-label="Produit"><?php echo $commande->nom_produit; ?></td>
+                <td data-label="Quantite"><?php echo $commande->quantite; ?></td>
+                <td data-label="Mouvement">                    
+                    <div><?php
+                        if ($commande->type_mouvement === 'Entree') {
                             echo '<img src="../source/img/entree.png" width="30" height="30" alt="Mouvement d\'entrée">';
-                        } elseif ($mouvement->type_mouvement === 'Sortie') {
+                        } elseif ($commande->type_mouvement === 'Sortie') {
                             echo '<img src="../source/img/sortie.png" width="30" height="30"  alt="Mouvement de sortie">';
                         }
-                    ?>
-                    <br><?php echo $mouvement->type_mouvement; ?>
-                </td>                <td data-label="Date"><?php echo $commande->date_commande; ?></td>
-                <td data-label="Statut"><?php echo $commande->statut; ?></td>
-
-            </tr>
-        <?php endforeach; ?>
-    </tbody>
-</table>
-
+                    ?><br><?php echo $commande->type_mouvement; ?></div></td>
+                <td data-label="Date"><?php echo $commande->date_commande; ?></td>
+                <td data-label="Statut">
+                    <?php if ($commande->statut === 'validee') {
+                        echo '<img src="../source/img/validee.png" width="50" height="50" alt="Statut validé">';
+                    } elseif ($commande->statut === 'invalidée') {
+                        echo '<img src="../source/img/invalidee.png" width="50" height="50" alt="Statut invalidé">';
+                    }elseif ($commande->statut === 'en attente') {
+                        echo '<img src="../source/img/en attente.png" width="50" height="50" alt="Statut en attente">';
+                        }?><br>
+                        <h3><?php echo $commande->statut; ?></h3     >
+                        <form method="POST" class="inline-form">
+                            <div class="flex-container-2"><br>
+                                <input type="hidden" name="commande_id" value="<?php echo $commande->id_commande; ?>">
+                                <button type="submit" name="valider_commande" class="cancel-button" onclick="return confirm('Êtes-vous sûr de vouloir valider la commande ?')">Valider</button>
+                                <button type="submit" name="invalider_commande" class="stock-button" onclick="return confirm('Êtes-vous sûr de vouloir invalider la commande ?')">Invalider</button>
+                            </form>             
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            <div>
+        </tbody>
+    </table>
     <footer class="site-footer">
         <?php include("zz_footer.html"); ?>
     </footer>

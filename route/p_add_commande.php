@@ -6,7 +6,6 @@ require_once 'z_int.php';
 $database = new Database();
 
 
-// Récupérer les informations de l'utilisateur connecté
 $sql = "SELECT id_utilisateur, nom, prenom, id_role FROM utilisateurs WHERE email = :email";
 $database->query($sql);
 $database->bind(':email', $email);
@@ -19,26 +18,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id_utilisateur = $_POST['id_utilisateur'];
     $id_stock = $_POST['id_stock'];
     $quantite = $_POST['quantite'];
-    $type_mouvement = $_POST['type_mouvement'];
-
-    // Vérifier si les valeurs sont valides (vous pouvez ajouter des validations supplémentaires si nécessaire)
-
-    // Insérer la commande dans la base de données
-    $sql = "INSERT INTO commande (id_utilisateur, id_stock, quantite, type_mouvement) VALUES (:id_utilisateur, :id_stock, :quantite, :type_mouvement)";
-    $database->query($sql);
-    $database->bind(':id_utilisateur', $id_utilisateur);
-    $database->bind(':id_stock', $id_stock);
-    $database->bind(':quantite', $quantite);
-    $database->bind(':type_mouvement', $type_mouvement);
-    $database->execute();
-
-    // Vérifier si l'insertion a réussi
-    if ($database->rowCount() > 0) {
-        echo "La commande a été insérée avec succès.";
+    
+    if (!empty($id_utilisateur) && !empty($id_stock) && !empty($quantite)) {
+        if ($user->id_role == 4) {
+            $type_mouvement = 'Entree';
+            $messageCommande = "Merci pour votre envoi.";
+        } else {
+            $type_mouvement = 'Sortie';
+            $messageCommande = "Votre commande sera traitée dans les plus brefs délais.";
+        }
+        
+        $sql = "INSERT INTO commandes (id_utilisateur, id_stock, quantite, type_mouvement) VALUES (:id_utilisateur, :id_stock, :quantite, :type_mouvement)";
+        $database->query($sql);
+        $database->bind(':id_utilisateur', $id_utilisateur);
+        $database->bind(':id_stock', $id_stock);
+        $database->bind(':quantite', $quantite);
+        $database->bind(':type_mouvement', $type_mouvement);
+        if ($database->execute()) {
+            $_SESSION['messageCommande'] = $messageCommande;
+            header("Location: p_commande.php");
+        }
+        
     } else {
-        echo "Erreur lors de l'insertion de la commande.";
+        $messageErr =  "Veuillez remplir tous les champs requis.";
     }
 }
+
+    $sql = "SELECT * FROM stocks";
+    $database->query($sql);
+    $stocks = $database->resultSet();
+
+
 
 ?>
 
@@ -54,24 +64,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php include("zz_header.html"); ?>
     </header>
     <h1>Passer une commande</h1>
-    <?php echo $user->id_utilisateur; ?>
-    <form action="insertion_commande.php" method="post">
+    <?php if (isset($messageErr)) { echo '<p class="error-message">' . htmlspecialchars_decode($messageErr) . '</p>'; } ?>
+
+    <form action="" method="post" class="stock-form">
         <input type="hidden" name="id_utilisateur" value="<?php echo $user->id_utilisateur; ?>">
 
-        <label for="id_stock">ID Stock:</label>
-        <input type="text" name="id_stock" id="id_stock"><br>
-
-        <label for="quantite">Quantité:</label>
-        <input type="text" name="quantite" id="quantite"><br>
-
-        <label for="type_mouvement">Type de mouvement:</label>
-        <select name="type_mouvement" id="type_mouvement">
-            <option value="Entree">Entrée</option>
-            <option value="Sortie">Sortie</option>
+        <label for="id_stock"  class="stock-label">Produit en stock:</label>
+        <select name="id_stock" id="id_stock" class="stock-select">
+            <?php foreach ($stocks as $stock) : ?>
+                <option value="<?php echo $stock->id_stock; ?>"><?php echo $stock->nom; ?></option>
+            <?php endforeach; ?>
         </select><br>
 
-        <input type="submit" value="Soumettre">
+        <label for="quantite" class="stock-label">Quantité:</label>
+        <input type="number" name="quantite" id="quantite" class="stock-input"><br>
+
+        <input type="submit" value="Soumettre"onclick="return confirm('Êtes-vous sûr de vouloir passer la commande ?')"class="stock-button">
     </form>
+
+
+
+
 
     <footer class="site-footer">
         <?php include("zz_footer.html"); ?>

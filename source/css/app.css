@@ -294,9 +294,11 @@ table th {
   
   table td {
     border-bottom: 1px solid #ddd;
-    display: block;
+    display: flex;
     font-size: 14px;
     text-align: right;
+    align-items: center;
+    justify-content: space-between;
   }
   
   table td::before {
@@ -471,6 +473,13 @@ select[name="id_role"] option {
 .flex-container{
   display: inline-block;
   margin-left: 20px;
+}
+
+.flex-container-2{
+  display: flex;
+  margin-left: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
 .role-column button   {

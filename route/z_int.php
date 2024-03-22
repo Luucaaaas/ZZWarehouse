@@ -41,10 +41,12 @@ if (isset($_SESSION['email'])) {
 
 $email = $_SESSION['email'];
 // qui est login avec quelle role ?
-$sql = "SELECT nom, prenom, id_role FROM utilisateurs WHERE email = :email";
+$sql = "SELECT id_utilisateur, nom, prenom, id_role FROM utilisateurs WHERE email = :email";
 $database->query($sql);
 $database->bind(':email', $email);
 $database->execute();
+// pour la page commande 
+$user = $database->single();
 
 if ($database->rowCount() == 1) {
     $row = $database->single();

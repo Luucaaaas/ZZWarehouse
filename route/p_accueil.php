@@ -14,11 +14,7 @@ require_once 'z_int.php'
 <?php include("zz_header.html"); ?>
 </header>
 <body>  
-<?php echo "Bonjour, $prenom $nom !"; ?><br>
-<?php echo $time_remaining ?>     
-<form action="z_reset_session.php" method="POST">
-        <button type="submit" name="reset">Réinitialiser le temps de session</button>
-    </form>
+DASHBOARD HERE !
 </body>
 <footer class="site-footer">
 <?php include("zz_footer.html"); ?>
