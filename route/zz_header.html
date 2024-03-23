@@ -4,7 +4,8 @@
     <label class="menu-icon" for="menu-btn"><span class="navicon"></span></label>
     <ul class="menu">
     <?php if ($id_role == '1') : ?><li><a href="p_role.php"><img src="../source/img/Role.png" width="25" height="25"><br>Rôle</a></li><?php endif; ?>
-      <li><a href="p_commande.php?column=date_commande&order=desc"><img src="../source/img/commande.png" width="25" height="25"><br>Commande</a></li>
+    <?php if ($id_role == '1' || $id_role == '2') : ?><li><a href="p_commande.php?column=date_commande&order=desc"><img src="../source/img/commande.png" width="25" height="25"><br>Commande</a></li><?php endif; ?>
+    <?php if ($id_role == '3' || $id_role == '4') : ?><li><a href="p_add_commande.php"><img src="../source/img/commande.png" width="25" height="25"><br>Commande</a></li><?php endif; ?>
       <li><a href="p_stock.php"><img src="../source/img/Stock.png" width="25" height="25"><br>Stock</a></li>
       <li><a href="z_logout.php"><img src="../source/img/logout.png" width="25" height="25"><br>Se déconnecter</a></li>
     </ul>

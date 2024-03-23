@@ -17,8 +17,10 @@ if (isset($_SESSION['error_message'])) {
 $message = isset($_SESSION['message']) ? $_SESSION['message'] : '';
 unset($_SESSION['message']);
 
+$column = isset($_GET['column']) ? $_GET['column'] : 'id_stock';
+$order = isset($_GET['order']) ? $_GET['order'] : 'asc';
 // requete pour avoir le stock
-$sql = "SELECT * FROM stocks";
+$sql = "SELECT * FROM stocks ORDER BY $column $order";
 $database->query($sql);
 $stocks = $database->resultSet();
 
@@ -54,13 +56,83 @@ if (isset($_SESSION['confirmation_message'])) {
 
 
         <table>
-            <thead>
+            <thead class="role-column">
                 <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col">Nom</th>
-                    <th scope="col">Description</th>
-                    <th scope="col">Quantité disponible</th>
-                    <th scope="col">Type</th>
+                    <th scope="col">
+                        <form method="get">
+                            <button type="submit" name="column" value="id_stock">
+                                ID
+                                <?php if ($column === 'id_stock') { ?>
+                                    <?php if ($order === 'asc') { ?>
+                                        <img src="../source/img/fleche-haut.png" width="30" height="30" alt="haut">
+                                    <?php } else { ?>
+                                        <img src="../source/img/fleche-bas.png" width="30" height="30" alt="bas">           
+                                    <?php } ?>
+                                <?php } ?>
+                            </button>
+                            <input type="hidden" name="order" value="<?php echo ($column === 'id_stock' && $order === 'asc') ? 'desc' : 'asc'; ?>">
+                        </form>
+                    </th>
+                    <th scope="col">
+                        <form method="get">
+                            <button type="submit" name="column" value="nom">
+                                Nom
+                                <?php if ($column === 'nom') { ?>
+                                    <?php if ($order === 'asc') { ?>
+                                        <img src="../source/img/fleche-haut.png" width="30" height="30" alt="haut">
+                                    <?php } else { ?>
+                                        <img src="../source/img/fleche-bas.png" width="30" height="30" alt="bas">           
+                                    <?php } ?>
+                                <?php } ?>
+                            </button>
+                            <input type="hidden" name="order" value="<?php echo ($column === 'nom' && $order === 'asc') ? 'desc' : 'asc'; ?>">
+                        </form>
+                    </th>
+                    <th scope="col">
+                        <form method="get">
+                            <button type="submit" name="column" value="description">
+                                Description
+                                <?php if ($column === 'description') { ?>
+                                    <?php if ($order === 'asc') { ?>
+                                        <img src="../source/img/fleche-haut.png" width="30" height="30" alt="haut">
+                                    <?php } else { ?>
+                                        <img src="../source/img/fleche-bas.png" width="30" height="30" alt="bas">           
+                                    <?php } ?>
+                                <?php } ?>
+                            </button>
+                            <input type="hidden" name="order" value="<?php echo ($column === 'description' && $order === 'asc') ? 'desc' : 'asc'; ?>">
+                        </form>
+                    </th>
+                    <th scope="col">
+                        <form method="get">
+                            <button type="submit" name="column" value="quantite_disponible">
+                                Quantité disponible
+                                <?php if ($column === 'quantite_disponible') { ?>
+                                    <?php if ($order === 'asc') { ?>
+                                        <img src="../source/img/fleche-haut.png" width="30" height="30" alt="haut">
+                                    <?php } else { ?>
+                                        <img src="../source/img/fleche-bas.png" width="30" height="30" alt="bas">           
+                                    <?php } ?>
+                                <?php } ?>
+                            </button>
+                            <input type="hidden" name="order" value="<?php echo ($column === 'quantite_disponible' && $order === 'asc') ? 'desc' : 'asc'; ?>">
+                        </form>
+                    </th>
+                    <th scope="col">
+                        <form method="get">
+                            <button type="submit" name="column" value="type">
+                                Type
+                                <?php if ($column === 'type') { ?>
+                                    <?php if ($order === 'asc') { ?>
+                                        <img src="../source/img/fleche-haut.png" width="30" height="30" alt="haut">
+                                    <?php } else { ?>
+                                        <img src="../source/img/fleche-bas.png" width="30" height="30" alt="bas">           
+                                    <?php } ?>
+                                <?php } ?>
+                            </button>
+                            <input type="hidden" name="order" value="<?php echo ($column === 'type' && $order === 'asc') ? 'desc' : 'asc'; ?>">
+                        </form>
+                    </th>
                     <?php if ($id_role == '1') : ?><th scope="col">Modifier</th><?php endif; ?>
                     <?php if ($id_role == '1') : ?><th scope="col">Supprimer</th><?php endif; ?>
                 </tr>
@@ -72,17 +144,24 @@ if (isset($_SESSION['confirmation_message'])) {
                                 <td data-label="Nom"><?php echo $item->nom; ?></td>
                                 <td data-label="Description"><?php echo $item->description; ?></td>
                                 <td data-label="Quantité disponible"><?php echo $item->quantite_disponible; ?></td>
-                                <td data-label="Type"><?php echo $item->type; ?></td>
+                                <td data-label="Type">
+                                    <?php if ($item->type == 'Medicament') : ?>
+                                        <img src="../source/img/medicament.png" width="50" height="50"alt="medicament">
+                                    <?php else : ?>
+                                        <img src="../source/img/materiel.png" width="50" height="50"alt="materiel">
+                                    <?php endif; ?><br>
+                                    <?php echo $item->type; ?>
+                                </td>
                                 <?php if ($id_role == '1') : ?><td data-label="Modifier">
                                     <form action="p_edit_stock.php" method="get">
                                         <input type="hidden" name="id_stock" value="<?php echo $item->id_stock; ?>">
-                                        <button type="submit">🖊️</button>
+                                        <button type="submit" class="cursor-pointer">🖊️</button>
                                     </form>
                                 </td><?php endif; ?>
                                 <?php if ($id_role == '1') : ?><td data-label="Supprimer">
                                     <form id="delete-form-<?php echo $item->id_stock; ?>" action="z_delete_stock.php" method="post">
                                     <input type="hidden" name="id_stock" value="<?php echo $item->id_stock; ?>">
-                                    <button type="button" onclick="showConfirmation(<?php echo $item->id_stock; ?>, '<?php echo addslashes($item->nom); ?>')">🗑️</button>
+                                    <button type="button" class="cursor-pointer" onclick="showConfirmation(<?php echo $item->id_stock; ?>, '<?php echo addslashes($item->nom); ?>')">🗑️</button>
                                 </form>
                             </td><?php endif; ?>
                         </tr>

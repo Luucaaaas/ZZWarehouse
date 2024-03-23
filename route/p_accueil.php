@@ -1,7 +1,12 @@
 <?php
 session_start();
 require_once 'Database.php';
-require_once 'z_int.php'
+require_once 'z_int.php';
+
+if (isset($_SESSION['messageCommande'])) {
+    $messageCommande = $_SESSION['messageCommande'];
+    unset($_SESSION['messageCommande']);
+}
 ?>
 
 <!DOCTYPE html>
@@ -14,6 +19,7 @@ require_once 'z_int.php'
 <?php include("zz_header.html"); ?>
 </header>
 <body>  
+<?php if ($id_role == '3' || $id_role == '4') : ?><?php if (isset($messageCommande)) { echo '<p class="confirmation-message">' . htmlspecialchars_decode($messageCommande) . '</p>'; } ?><?php endif; ?>
 DASHBOARD HERE !
 </body>
 <footer class="site-footer">

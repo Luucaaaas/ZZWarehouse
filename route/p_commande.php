@@ -5,10 +5,15 @@ require_once 'z_int.php';
 
 $database = new Database();
 
-$column = isset($_GET['column']) ? $_GET['column'] : 'id_commande';
+if ($id_role != '1' && $id_role != '2') {
+    header("Location: p_accueil.php");
+    exit;
+}
+
+$column = isset($_GET['column']) ? $_GET['column'] : 'date_commande';
 $order = isset($_GET['order']) ? $_GET['order'] : 'asc';
 
-$database->query("SELECT c.id_commande, u.nom AS nom_utilisateur, s.nom AS nom_produit, c.quantite, c.type_mouvement, c.date_commande, c.statut FROM commandes c
+$database->query("SELECT c.id_commande, u.nom AS nom_utilisateur, u.prenom AS prenom_utilisateur, s.nom AS nom_produit, c.quantite, c.type_mouvement, c.date_commande, c.statut FROM commandes c
                   JOIN utilisateurs u ON c.id_utilisateur = u.id_utilisateur
                   JOIN stocks s ON c.id_stock = s.id_stock
                   ORDER BY $column $order");
@@ -78,124 +83,123 @@ if (isset($_SESSION['messageCommande'])) {
         <div class="trois"></div>
         <div class="trois"><h1>Commande</h1></div>
         <div class="trois">
-            <?php if ($id_role == '1') : ?>
-                <a href="p_add_commande.php" class="btn-add">➕Ajouter une Commande</a>
+        <?php if ($id_role == '1' || $id_role == '2') : ?>
+             <a href="p_add_commande.php" class="btn-add">➕Ajouter une Commande</a>
             <?php endif; ?>
         </div>
     </div>
     <?php if (isset($messageCommande)) { echo '<p class="confirmation-message">' . htmlspecialchars_decode($messageCommande) . '</p>'; } ?>
-    
-
         <table>
-        <thead class="role-column">
+            <thead class="role-column">
                 <tr>
                     <th scope="col">
-                    <form method="get">
-                        <button type="submit" name="column" value="id_commande">
-                            ID
-                            <?php if ($column === 'id_commande') { ?>
-                                <?php if ($order === 'asc') { ?>
+                        <form method="get">
+                            <button type="submit" name="column" value="id_commande">
+                                ID
+                                <?php if ($column === 'id_commande') { ?>
+                                    <?php if ($order === 'asc') { ?>
+                                        <img src="../source/img/fleche-haut.png" width="30" height="30" alt="haut">
+                                    <?php } else { ?>
+                                        <img src="../source/img/fleche-bas.png" width="30" height="30" alt="bas">           
+                                    <?php } ?>
+                                <?php } ?>
+                            </button>
+                            <input type="hidden" name="order" value="<?php echo ($column === 'id_commande' && $order === 'asc') ? 'desc' : 'asc'; ?>">
+                        </form>
+                    </th>
+                    <th scope="col">
+                        <form method="get">
+                            <button type="submit" name="column" value="nom_utilisateur">
+                                Utilisateur
+                                <?php if ($column === 'nom_utilisateur') { ?><?php if ($order === 'asc') { ?>
                                     <img src="../source/img/fleche-haut.png" width="30" height="30" alt="haut">
                                 <?php } else { ?>
                                     <img src="../source/img/fleche-bas.png" width="30" height="30" alt="bas">           
                                 <?php } ?>
                             <?php } ?>
-                        </button>
-                    <input type="hidden" name="order" value="<?php echo ($column === 'id_commande' && $order === 'asc') ? 'desc' : 'asc'; ?>">
-                </form>
-            </th>                    
-            <th scope="col">
-                <form method="get">
-                    <button type="submit" name="column" value="nom_utilisateur">
-                        Utilisateur
-                        <?php if ($column === 'nom_utilisateur') { ?>
-                            <?php if ($order === 'asc') { ?>
-                                <img src="../source/img/fleche-haut.png" width="30" height="30" alt="haut">
-                            <?php } else { ?>
-                                <img src="../source/img/fleche-bas.png" width="30" height="30" alt="bas">           
-                            <?php } ?>
+                        </button>   
+                        <input type="hidden" name="order" value="<?php echo ($column === 'nom_utilisateur' && $order === 'asc') ? 'desc' : 'asc'; ?>">
+                    </form>
+                </th>   
+                    <th scope="col">
+            <form method="get">
+                <button type="submit" name="column" value="nom_produit">
+                    Produit
+                    <?php if ($column === 'nom_produit') { ?>
+                        <?php if ($order === 'asc') { ?>
+                            <img src="../source/img/fleche-haut.png" width="30" height="30" alt="haut">
+                        <?php } else { ?>
+                            <img src="../source/img/fleche-bas.png" width="30" height="30" alt="bas">           
                         <?php } ?>
-                    </button>
-                    <input type="hidden" name="order" value="<?php echo ($column === 'nom_utilisateur' && $order === 'asc') ? 'desc' : 'asc'; ?>">
-                </form>
-            </th>   
-            <th scope="col">
-    <form method="get">
-        <button type="submit" name="column" value="nom_produit">
-            Produit
-            <?php if ($column === 'nom_produit') { ?>
-                <?php if ($order === 'asc') { ?>
-                    <img src="../source/img/fleche-haut.png" width="30" height="30" alt="haut">
-                <?php } else { ?>
-                    <img src="../source/img/fleche-bas.png" width="30" height="30" alt="bas">           
-                <?php } ?>
-            <?php } ?>
-        </button>
-        <input type="hidden" name="order" value="<?php echo ($column === 'nom_produit' && $order === 'asc') ? 'desc' : 'asc'; ?>">
-    </form>
-</th>                    <th scope="col">
-    <form method="get">
-        <button type="submit" name="column" value="quantite">
-            Quantite
-            <?php if ($column === 'quantite') { ?>
-                <?php if ($order === 'asc') { ?>
-                    <img src="../source/img/fleche-haut.png" width="30" height="30" alt="haut">
-                <?php } else { ?>
-                    <img src="../source/img/fleche-bas.png" width="30" height="30" alt="bas">           
-                <?php } ?>
-            <?php } ?>
-        </button>
-        <input type="hidden" name="order" value="<?php echo ($column === 'quantite' && $order === 'asc') ? 'desc' : 'asc'; ?>">
-    </form>
-</th>                    <th scope="col">
-    <form method="get">
-        <button type="submit" name="column" value="type_mouvement">
-            Mouvement
-            <?php if ($column === 'type_mouvement') { ?>
-                <?php if ($order === 'asc') { ?>
-                    <img src="../source/img/fleche-haut.png" width="30" height="30" alt="haut">
-                <?php } else { ?>
-                    <img src="../source/img/fleche-bas.png" width="30" height="30" alt="bas">           
-                <?php } ?>
-            <?php } ?>
-        </button>
-        <input type="hidden" name="order" value="<?php echo ($column === 'type_mouvement' && $order === 'asc') ? 'desc' : 'asc'; ?>">
-    </form>
-</th>                    <th scope="col">
-    <form method="get">
-        <button type="submit" name="column" value="date_commande">
-            Date
-            <?php if ($column === 'date_commande') { ?>
-                <?php if ($order === 'asc') { ?>
-                    <img src="../source/img/fleche-haut.png" width="30" height="30" alt="haut">
-                <?php } else { ?>
-                    <img src="../source/img/fleche-bas.png" width="30" height="30" alt="bas">           
-                <?php } ?>
-            <?php } ?>
-        </button>
-        <input type="hidden" name="order" value="<?php echo ($column === 'date_commande' && $order === 'asc') ? 'desc' : 'asc'; ?>">
-    </form>
-</th>                    <th scope="col">
-    <form method="get">
-        <button type="submit" name="column" value="statut">
-            Statut
-            <?php if ($column === 'statut') { ?>
-                <?php if ($order === 'asc') { ?>
-                    <img src="../source/img/fleche-haut.png" width="30" height="30" alt="haut">
-                <?php } else { ?>
-                    <img src="../source/img/fleche-bas.png" width="30" height="30" alt="bas">           
-                <?php } ?>
-            <?php } ?>
-        </button>
-        <input type="hidden" name="order" value="<?php echo ($column === 'statut' && $order === 'asc') ? 'desc' : 'asc'; ?>">
-    </form>
-</th>                </tr>
+                    <?php } ?>
+                </button>
+                <input type="hidden" name="order" value="<?php echo ($column === 'nom_produit' && $order === 'asc') ? 'desc' : 'asc'; ?>">
+            </form>
+        </th>
+                    <th scope="col">
+                        <form method="get">
+                            <button type="submit" name="column" value="quantite">
+                                Quantite
+                                <?php if ($column === 'quantite') { ?>
+                                    <?php if ($order === 'asc') { ?>
+                                        <img src="../source/img/fleche-haut.png" width="30" height="30" alt="haut">
+                                    <?php } else { ?>
+                                        <img src="../source/img/fleche-bas.png" width="30" height="30" alt="bas">           
+                                    <?php } ?>
+                                <?php } ?>
+                            </button>
+                            <input type="hidden" name="order" value="<?php echo ($column === 'quantite' && $order === 'asc') ? 'desc' : 'asc'; ?>">
+                        </form>
+                    </th>                    <th scope="col">
+                        <form method="get">
+                            <button type="submit" name="column" value="type_mouvement">
+                                Mouvement
+                                <?php if ($column === 'type_mouvement') { ?>
+                                    <?php if ($order === 'asc') { ?>
+                                        <img src="../source/img/fleche-haut.png" width="30" height="30" alt="haut">
+                                    <?php } else { ?>
+                                        <img src="../source/img/fleche-bas.png" width="30" height="30" alt="bas">           
+                                    <?php } ?>
+                                <?php } ?>
+                            </button>
+                            <input type="hidden" name="order" value="<?php echo ($column === 'type_mouvement' && $order === 'asc') ? 'desc' : 'asc'; ?>">
+                        </form>
+                    </th>                    <th scope="col">
+                        <form method="get">
+                            <button type="submit" name="column" value="date_commande">
+                                Date
+                                <?php if ($column === 'date_commande') { ?>
+                                    <?php if ($order === 'asc') { ?>
+                                        <img src="../source/img/fleche-haut.png" width="30" height="30" alt="haut">
+                                    <?php } else { ?>
+                                        <img src="../source/img/fleche-bas.png" width="30" height="30" alt="bas">           
+                                    <?php } ?>
+                                <?php } ?>
+                            </button>
+                            <input type="hidden" name="order" value="<?php echo ($column === 'date_commande' && $order === 'asc') ? 'desc' : 'asc'; ?>">
+                        </form>
+                    </th>                    <th scope="col">
+                        <form method="get">
+                            <button type="submit" name="column" value="statut">
+                                Statut
+                                <?php if ($column === 'statut') { ?>
+                                    <?php if ($order === 'asc') { ?>
+                                        <img src="../source/img/fleche-haut.png" width="30" height="30" alt="haut">
+                                    <?php } else { ?>
+                                        <img src="../source/img/fleche-bas.png" width="30" height="30" alt="bas">           
+                                    <?php } ?>
+                                <?php } ?>
+                            </button>
+                            <input type="hidden" name="order" value="<?php echo ($column === 'statut' && $order === 'asc') ? 'desc' : 'asc'; ?>">
+                        </form>
+                    </th>        
+                </tr>
             </thead>
             <tbody>
         <?php foreach ($commandes as $commande) : ?>
             <tr>
                 <td data-label="ID"><?php echo $commande->id_commande; ?></td>
-                <td data-label="Utilisateur"><?php echo $commande->nom_utilisateur; ?></td>
+                <td data-label="Utilisateur"><?php echo $commande->nom_utilisateur . ' ' . $commande->prenom_utilisateur; ?></td>
                 <td data-label="Produit"><?php echo $commande->nom_produit; ?></td>
                 <td data-label="Quantite"><?php echo $commande->quantite; ?></td>
                 <td data-label="Mouvement">                    
@@ -220,11 +224,13 @@ if (isset($_SESSION['messageCommande'])) {
 
                     <?php if ($commande->statut === 'En attente') : ?>
                         <form method="POST" class="inline-form">
-                            <div class="flex-container-2"><br>
-                                <input type="hidden" name="commande_id" value="<?php echo $commande->id_commande; ?>">
-                                <button type="submit" name="valider_commande" class="stock-button" onclick="return confirm('Êtes-vous sûr de vouloir valider la commande ?')">Valider</button>
-                                <button type="submit" name="invalider_commande" class="cancel-button" onclick="return confirm('Êtes-vous sûr de vouloir invalider la commande ?')">Invalider</button>
-                            </div>
+                            <?php if ($id_role == '1') : ?>
+                                <div class="flex-container-2"><br>
+                                    <input type="hidden" name="commande_id" value="<?php echo $commande->id_commande; ?>">
+                                    <button type="submit" name="valider_commande" class="stock-button" onclick="return confirm('Êtes-vous sûr de vouloir valider la commande ?')">Valider</button>
+                                    <button type="submit" name="invalider_commande" class="cancel-button" onclick="return confirm('Êtes-vous sûr de vouloir invalider la commande ?')">Invalider</button>
+                                </div>
+                            <?php endif; ?>
                         </form>
                     <?php endif; ?>
                 </td>

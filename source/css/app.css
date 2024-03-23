@@ -261,9 +261,15 @@ table td {
 }
 
 table th {
-  font-size: .85em;
-  letter-spacing: .1em;
-  text-transform: uppercase;
+  font-family: 'NewsGothicCondensed', sans-serif;
+  font-size: 24px;
+  font-weight: bold;
+  background: #f5f5f5;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding: 5px;
+  border: 0px solid #f5f5f5;
+  cursor:default;
 }
 
 @media screen and (max-width: 897px) {
@@ -497,4 +503,8 @@ select[name="id_role"] option {
 .role-column button:hover   { 
   border: 2px solid #2DBBFF;
   border-radius: 20px
+}
+
+.cursor-pointer {
+  cursor: pointer;
 }
