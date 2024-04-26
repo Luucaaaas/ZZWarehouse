@@ -7,6 +7,27 @@ if (isset($_SESSION['messageCommande'])) {
     $messageCommande = $_SESSION['messageCommande'];
     unset($_SESSION['messageCommande']);
 }
+
+
+
+
+$database = new Database();
+
+$sql = "SELECT YEAR(date_commande) AS annee, MONTH(date_commande) AS mois, SUM(quantite) AS total_commande
+        FROM commandes
+        WHERE statut = 'Validee'
+        GROUP BY YEAR(date_commande), MONTH(date_commande)
+        ORDER BY YEAR(date_commande), MONTH(date_commande)";
+
+$database->query($sql);
+$results = $database->resultSet();
+
+
+
+
+
+
+
 ?>
 
 <!DOCTYPE html>
@@ -20,7 +41,45 @@ if (isset($_SESSION['messageCommande'])) {
 </header>
 <body>  
 <?php if ($id_role == '3' || $id_role == '4') : ?><?php if (isset($messageCommande)) { echo '<p class="confirmation-message">' . htmlspecialchars_decode($messageCommande) . '</p>'; } ?><?php endif; ?>
-DASHBOARD HERE !
+
+
+
+
+
+
+    <li><a href="p_top_commande.php"><img src="../source/img/stonks.png" width="100" height="100"><br>TOP article 📈🔥</a></li>
+
+
+
+
+
+
+
+
+    <table>
+            <tr>
+                <th>Mois</th>
+                <th>Année</th>
+                <th>Quantité total des commandes</th>
+            </tr>
+
+    <?php foreach ($results as $row)
+    $mois = date('F', mktime(0, 0, 0, $row->mois, 1)); ?>
+        <tr>
+                <td data-label="mois"><?php echo $mois; ?></td>
+                <td data-label="annee"><?php echo $row->annee; ?></td>
+                <td data-label="Quantité total"><?php echo $row->total_commande; ?></td>
+
+            </tr>
+    </table>
+
+
+
+
+
+
+
+
 </body>
 <footer class="site-footer">
 <?php include("zz_footer.html"); ?>

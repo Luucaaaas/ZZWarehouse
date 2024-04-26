@@ -135,6 +135,7 @@ if (isset($_SESSION['confirmation_message'])) {
                     </th>
                     <?php if ($id_role == '1') : ?><th scope="col">Modifier</th><?php endif; ?>
                     <?php if ($id_role == '1') : ?><th scope="col">Supprimer</th><?php endif; ?>
+                    <?php if ($id_role == '1' || $id_role == '2') : ?><th scope="col">Stock faible</th><?php endif; ?>
                 </tr>
                 <thead>
                     <tbody>
@@ -164,6 +165,26 @@ if (isset($_SESSION['confirmation_message'])) {
                                     <button type="button" class="cursor-pointer" onclick="showConfirmation(<?php echo $item->id_stock; ?>, '<?php echo addslashes($item->nom); ?>')">🗑️</button>
                                 </form>
                             </td><?php endif; ?>
+
+
+
+
+
+
+                            
+<?php if ($id_role == '1' || $id_role == '2') : ?>
+    <td data-label="Stock faible">
+        <?php if ($item->quantite_disponible <= 50) { ?>
+            <span style="color: red;">Stock faible</span>
+        <?php } ?>
+    </td>
+<?php endif; ?>
+
+
+
+
+
+
                         </tr>
                         <?php } ?>
                     </tbody>
