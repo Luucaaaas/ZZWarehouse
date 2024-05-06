@@ -1,12 +1,11 @@
 <?php
-require_once 'Database.php';
 
 $database = new Database();
 
 // utilisateur login ? 
 if (!isset($_SESSION['email'])) {
   //redirection sur la page de login si l utilisateur n'est pas connecte 
-  header("Location: p_index.php");
+  header("Location: ./index.php?uc=login");
   exit();
 }
 
@@ -19,11 +18,10 @@ if (isset($_SESSION['email'])) {
 
   if ($session_time_remaining <= 0) {
     // redirection quand le temps de session n'est plus valide vers le code pour "detruire la session" 
-    header("Location: z_logout.php");
+    header("Location: ../source/controleur/logout.php");
       exit();
   }
 
-  // temps de seesion sera supprime je pense lors de la version final du projet 
   $hours_remaining = floor($session_time_remaining / 3600);
   $minutes_remaining = floor(($session_time_remaining % 3600) / 60);
   $seconds_remaining = $session_time_remaining % 60;
@@ -56,5 +54,5 @@ if ($database->rowCount() == 1) {
 } else {
     $nom = "?";
     $prenom = "???";
-    $id_role = "";
+    $id_role = "?";
 }

@@ -1,16 +1,15 @@
 <?php
-
 session_start();
 
 // connexion a la bdd
-require_once 'Database.php';
+require_once '../source/base/database.php';
 
 $database = new Database();
 
 
 // déjà connecté ?
 if (isset($_SESSION['email'])) {
-    header("Location: p_accueil.php");
+    header("Location: ./index.php?uc=accueil");
     exit();
 }
 
@@ -46,7 +45,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
             $database->execute();
 
             session_regenerate_id();
-            header("Location: p_accueil.php");
+            header("Location: ./index.php?uc=accueil");
             exit();
         } else {
             if ($user && $user->login_attempts >= 10) {
@@ -115,15 +114,15 @@ $database = null;
 <!DOCTYPE html>
 <html>
 <head>
-    <link rel="stylesheet" href="../source/css/index.css">
+    <link rel="stylesheet" href="./style/index.css">
     <title>ZZWarehouse | Login</title>
-    <link rel="icon" href="../source/img/logogsbpetit.ico" type="image/x-icon">
+    <link rel="icon" href="./img/logogsbpetit.ico" type="image/x-icon">
 </head>
 <body>
 <div class="container">
     <div class="image-container"></div>
     <div class="info-container">
-        <div class="gsblogo"><a href="../route/p_index.php"><img src="../source/img/logogsb.png"></a></div>
+        <div class="gsblogo"><a href="index.php?uc=login"><img src="./img/logogsb.png"></a></div>
 
         <div class="main">
             <input type="checkbox" id="chk" aria-hidden="true">
