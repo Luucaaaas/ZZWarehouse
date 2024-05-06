@@ -32,7 +32,7 @@ if (isset($_POST['valider_commande'])) {
     $type_mouvement = $result->type_mouvement;
 
     if ($type_mouvement === 'Sortie' && $stock_disponible < $quantite_commande) {
-        $_SESSION['messageCommande'] = 'La quantité en stock est insuffisante pour valider la commande.';
+        $_SESSION['messageCommandeInsuffisant'] = 'La quantité en stock est insuffisante pour valider la commande.';
     } else {
         $database->query("UPDATE commandes SET statut = 'validee' WHERE id_commande = :commande_id");
         $database->bind(':commande_id', $commande_id);
@@ -72,6 +72,11 @@ if (isset($_SESSION['messageCommande'])) {
     unset($_SESSION['messageCommande']);
 }
 
+if (isset($_SESSION['messageCommandeInsuffisant'])) {
+    $messageCommandeInsuffisant = $_SESSION['messageCommandeInsuffisant'];
+    unset($_SESSION['messageCommandeInsuffisant']);
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -96,6 +101,7 @@ if (isset($_SESSION['messageCommande'])) {
         </div>
     </div>
     <?php if (isset($messageCommande)) { echo '<p class="confirmation-message">' . htmlspecialchars_decode($messageCommande) . '</p>'; } ?>
+    <?php if (isset($messageCommandeInsuffisant)) { echo '<p class="error-message">' . htmlspecialchars_decode($messageCommandeInsuffisant) . '</p>'; } ?>
         <table>
             <thead class="role-column">
                 <th scope="col">

@@ -488,7 +488,7 @@ select[name="id_role"] option {
   flex-wrap: wrap;
 }
 
-.role-column button   {
+.role-column a   {
   font-family: 'NewsGothicCondensed', sans-serif;
   font-size: 24px;
   font-weight: bold;
@@ -496,11 +496,14 @@ select[name="id_role"] option {
   margin-top: 10px;
   margin-bottom: 10px;
   padding: 5px;
-  border: 0px solid #f5f5f5;
+  border: 1px solid #000000;
+  border-radius: 20px;
   cursor: help;
+  color: #2DBBFF;
+  text-decoration: none;
 }
 
-.role-column button:hover   { 
+.role-column a:hover   { 
   border: 2px solid #2DBBFF;
   border-radius: 20px
 }
