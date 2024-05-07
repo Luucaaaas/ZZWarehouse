@@ -1,6 +1,6 @@
 ## Hébergement
 
-Le site est disponible a l'adresse web suivante : alazary.fr
+Le site est disponible a l'adresse web suivante : https://alazary.fr
 
 # Installation
 
