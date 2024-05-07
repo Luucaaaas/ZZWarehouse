@@ -55,7 +55,7 @@ USE nom_de_la_base;
 ```
 ##### Création d'un utilisateur
 ```ssh
-GRANT ALL PRIVILEGES ON nom_de_la_base.* TO 'nom_de_l'utilisateur@'localhost' IDENTIFIED BY 'mot_de_passe'; FLUSH PRIVILEGES;
+GRANT ALL PRIVILEGES ON nom_de_la_base.* TO 'nom_de_l'utilisateur'@'localhost' IDENTIFIED BY 'mot_de_passe'; FLUSH PRIVILEGES;
 ```
 ##### Importation de la base de données
 ```ssh
