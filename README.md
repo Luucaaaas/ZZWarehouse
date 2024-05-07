@@ -1,10 +1,9 @@
 ## Hébergement
 
-Le site est disponible a l'adresse web suivante : https://alazary.fr
+Ce projet est hébergé sur un VPS Ubuntu 23.04 accessible depuis : https://alazary.fr.
 
-# Installation
+### Étape 1 : Installation
 
-### Etape 1 : installation
 ```sh
 sudo apt update
 ```
@@ -26,12 +25,13 @@ sudo systemctl enable apache2
 ```sh
 mariadb-server -y
 ```
-##### Sécuriser la bdd 
+##### Sécuriser la base de données
+
 ```sh
 sudo mysql_secure_installation
 ```
 
-##### Installation de PHP (ici on installe php avec les extention apache et mysql)
+##### Installation de PHP (ici, on installe PHP avec les extensions Apache et MySQL)
 ```ssh
 sudo apt install php libapache2-mod-php php-mysql -y
 ```
@@ -40,30 +40,30 @@ sudo apt install php libapache2-mod-php php-mysql -y
 sudo systemctl restart apache2
 ```
 
-### Etape 2 : Configuration de la bdd 
-##### Connexion a mariadb
+### Étape 2 : Configuration de la base de données
+##### Connexion à MariaDB
 ```ssh
 sudo mysql -u root -p
 ```
-##### Création de la bdd
+##### Création de la base de données
 ```ssh
 CREATE DATABASE nom_de_la_base;
 ```
-##### Utiliser la bdd 
+##### Utiliser la base de données
 ```ssh
 USE nom_de_la_base;
 ```
-##### Création d’un utilisateur 
+##### Création d'un utilisateur
 ```ssh
 GRANT ALL PRIVILEGES ON nom_de_la_base.* TO 'nom_de_l'utilisateur@'localhost' IDENTIFIED BY 'mot_de_passe'; FLUSH PRIVILEGES;
 ```
-##### Importation de la bdd
+##### Importation de la base de données
 ```ssh
 source /chemin/vers/le/script.sql;
 ```
-### Etape 3 : Configuration du server (apache)
+### Étape 3 : Configuration du serveur (Apache)
 
-##### Creation des dossiers
+##### Création des dossiers
 ```sh
 sudo mkdir -p /var/www/nom_de_domaine.com/html
 ```
@@ -124,9 +124,9 @@ sudo apt install certbot python3-certbot-apache -y
 ```sh
 sudo certbot --apache
 ```
-## Techno
+## Technologies
 
-Voici la liste des technologies utilisées
+Voici la liste des technologies utilisées :
 
 | Technologie | Site |
 | ------ | ------ |
@@ -135,7 +135,3 @@ Voici la liste des technologies utilisées
 | PHP | https://www.php.net/ |
 | GitHub | https://github.com/ |
 | Mariadb | https://mariadb.org/ |
-
-
-
-
