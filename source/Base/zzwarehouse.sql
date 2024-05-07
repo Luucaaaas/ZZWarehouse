@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : sam. 23 mars 2024 à 21:13
+-- Généré le : mar. 07 mai 2024 à 09:28
 -- Version du serveur : 10.4.32-MariaDB
 -- Version de PHP : 8.2.12
 
@@ -42,14 +42,14 @@ CREATE TABLE `commandes` (
 --
 
 INSERT INTO `commandes` (`id_commande`, `id_utilisateur`, `id_stock`, `quantite`, `type_mouvement`, `date_commande`, `statut`) VALUES
-(1, 31, 1, 10, 'Sortie', '2024-03-23 18:12:45', 'Invalidée'),
-(2, 9, 30, 90, 'Entree', '2024-03-23 18:39:39', 'En attente'),
+(1, 31, 1, 10, 'Sortie', '2024-02-01 18:12:45', 'Invalidée'),
+(2, 9, 30, 90, 'Entree', '2024-03-23 18:39:39', 'Validee'),
 (3, 27, 7, 17, 'Sortie', '2024-03-23 18:39:48', 'Validee'),
-(4, 7, 1, 90, 'Entree', '2024-03-23 18:49:18', 'En attente'),
-(5, 5, 1, 10, 'Sortie', '2024-03-23 20:19:46', 'En attente'),
-(6, 6, 1, 10, 'Sortie', '2024-03-23 20:20:27', 'En attente'),
-(7, 11, 1, 10, 'Sortie', '2024-03-23 20:20:51', 'En attente'),
-(8, 17, 1, 10, 'Sortie', '2024-03-23 20:32:21', 'En attente'),
+(4, 7, 1, 90, 'Entree', '2024-03-23 18:49:18', 'Invalidée'),
+(5, 5, 1, 10, 'Sortie', '2024-03-23 20:19:46', 'Validee'),
+(6, 6, 1, 10, 'Sortie', '2024-03-23 20:20:27', 'Invalidée'),
+(7, 11, 1, 10, 'Sortie', '2024-03-23 20:20:51', 'Validee'),
+(8, 17, 1, 10, 'Sortie', '2024-03-23 20:32:21', 'Validee'),
 (9, 4, 1, 90, 'Entree', '2024-03-23 20:32:48', 'Validee'),
 (10, 35, 1, 90, 'Sortie', '2024-03-23 20:37:18', 'Validee');
 
@@ -93,8 +93,8 @@ CREATE TABLE `stocks` (
 --
 
 INSERT INTO `stocks` (`id_stock`, `nom`, `description`, `quantite_disponible`, `type`) VALUES
-(1, 'Aspirine', 'Analgésique et antipyrétique', 2201, 'Medicament'),
-(2, 'Stéthoscope', 'Instrument médical pour écouter les sons internes du corps', 10, 'Materiel'),
+(1, 'Aspirine', 'Analgésique et antipyrétique', 1400, 'Medicament'),
+(2, 'Stéthoscope', 'Instrument médical pour écouter les sons internes du corps', 1, 'Materiel'),
 (3, 'Amoxicilline', 'Antibiotique', 10, 'Medicament'),
 (4, 'Tensiomètre', 'Appareil pour mesurer la pression artérielle', 5, 'Materiel'),
 (5, 'Ibuprofene', 'Anti-inflammatoire non stéroïdien', 75, 'Medicament'),
@@ -107,22 +107,22 @@ INSERT INTO `stocks` (`id_stock`, `nom`, `description`, `quantite_disponible`, `
 (12, 'Antihistaminique', 'Médicament pour le traitement des allergies', 40, 'Medicament'),
 (13, 'Gants médicaux', 'Équipement de protection pour les mains', 100, 'Materiel'),
 (14, 'Antiémétique', 'Médicament pour le traitement des nausées et vomissements', 25, 'Medicament'),
-(15, 'Oxymètre de pouls', 'Appareil pour mesurer la saturation en oxygène dans le sang', 102, 'Materiel'),
+(15, 'Oxymètre de pouls', 'Appareil pour mesurer la saturation en oxygène dans le sang', 12, 'Materiel'),
 (16, 'Fluorouracile', 'Médicament utilisé dans le traitement du cancer', 15, 'Medicament'),
 (17, 'Cannule nasale', 'Dispositif pour l\'administration d\'oxygène par le nez', 30, 'Materiel'),
 (18, 'Antibiotique topique', 'Médicament pour le traitement des infections cutanées', 50, 'Medicament'),
 (19, 'Glucomètre', 'Appareil pour mesurer la glycémie', 9, 'Materiel'),
 (20, 'Antidépresseur', 'Médicament pour le traitement de la dépression', 35, 'Medicament'),
-(21, 'Masque facial', 'Équipement de protection pour le visage', 80, 'Materiel'),
+(21, 'Masque facial', 'Équipement de protection pour le visage', 476, 'Medicament'),
 (22, 'Anticoagulant', 'Médicament pour prévenir la formation de caillots sanguins', 60, 'Medicament'),
 (23, 'Cathéter', 'Tube médical utilisé pour l\'administration de liquides ou de médicaments', 25, 'Materiel'),
 (24, 'Antipyrétique', 'Médicament pour réduire la fièvre', 70, 'Medicament'),
 (25, 'Oxygène portable', 'Dispositif pour l\'administration d\'oxygène en déplacement', 7, 'Materiel'),
-(26, 'Antihypertenseur', 'Médicament pour le traitement de l\'hypertension artérielle', 45, 'Medicament'),
+(26, 'Antihypertenseur', 'Médicament pour le traitement de l\'hypertension artérielle', 15, 'Medicament'),
 (27, 'Bandage élastique', 'Matériel de bandage extensible', 120, 'Materiel'),
 (28, 'Antifongique', 'Médicament pour le traitement des infections fongiques', 55, 'Medicament'),
-(29, 'Glaçons réutilisables', 'Équipement pour l\'application de froid thérapeutique', 18, 'Materiel'),
-(30, 'Antiviral', 'Médicament pour le traitement des infections virales', 25, 'Medicament');
+(29, 'Glaçons réutilisables', 'Équipement pour l\'application de froid thérapeutique', 146, 'Medicament'),
+(30, 'Antiviral', 'Médicament pour le traitement des infections virales', 295, 'Medicament');
 
 -- --------------------------------------------------------
 
@@ -149,8 +149,8 @@ INSERT INTO `utilisateurs` (`id_utilisateur`, `nom`, `prenom`, `email`, `mot_de_
 (1, 'admin', 'admin', 'admin@gmail.com', '$2y$10$HOEKqeMinZGoMVkJ23n8J.BSIDe0P7dNpL2fgcsC4ipbqm1fjmz9a', 1, 0, NULL),
 (2, 'user', 'user', 'user@gmail.com', '$2y$10$JVWmczTnD6UR85UUUWR0muap6SqVhm./W7gLnxJoBv3GOszVpYQlG', 2, 0, NULL),
 (3, 'client', 'client', 'client@gmail.com', '$2y$10$aRLMc/TfeQqla4NLfYfgaeydy.GRsBt1Rmg07p.fVqbeph0/E8Oxa', 3, 0, NULL),
-(4, 'fourniseur', 'fourniseur', 'fourniseur@gmail.com', '$2y$10$k2XmSb9HYiL6w984mvber.vsxXjAanwiNXggeOVIDdvONqeazy6JS', 4, 0, NULL),
-(5, 'Zidane', 'Zinedine', 'zizou@gmail.com', '$2y$10$dvTVZL8MG9Zd4rMxrrAv3OBRcsvIEQAmh5m1TVGGmOzJpuQJXNZMS', 1, 0, NULL),
+(4, 'fournisseur', 'fournisseur', 'fournisseur@gmail.com', '$2y$10$yY2XevTKnT5X2bjmhuGWuu1e2AXe7YgL4YrubDcut4tUwHURhToB2', 4, 0, NULL),
+(5, 'Zidane', 'Zinedine', 'zizou@gmail.com', '$2y$10$HH6oERn6n0qqUoCzQQm9VeKDSPVD0oBv4CmUn6A6kKZ/zn0gcyBNG', 1, 0, NULL),
 (6, 'San juan', 'Coco', 'coco92@gmail.com', '$2y$10$N4u.LUvm91Wfv4A51WDkIeu4gM4ayanyALFym.q5VUzz2.ZDDLpdK', 2, 0, '2024-02-25 14:58:10'),
 (7, 'Nicolas', 'Barbet', 'n.barbet@le-fourniseur.com', '$2y$10$b/cXPWwVCik/otWCHEzw6OUDGwNEqNXmtrVH8DvFl9rgUcXn8eIGu', 4, 0, NULL),
 (8, 'Smith', 'Emily', 'emilysmith@gmail.fr', '$2y$10$N4u.LUvm91Wfv4A51WDkIeu4gM4ayanyALFym.q5VUzz2.ZDDLpdK', 2, 0, NULL),
@@ -165,7 +165,7 @@ INSERT INTO `utilisateurs` (`id_utilisateur`, `nom`, `prenom`, `email`, `mot_de_
 (17, 'Anderson', 'Isabella', 'isabellaanderson@icloud.com', '$2y$10$N4u.LUvm91Wfv4A51WDkIeu4gM4ayanyALFym.q5VUzz2.ZDDLpdK', 3, 0, NULL),
 (18, 'Wilson', 'Benjamin', 'benjaminwilson@gmail.fr', '$2y$10$N4u.LUvm91Wfv4A51WDkIeu4gM4ayanyALFym.q5VUzz2.ZDDLpdK', 2, 0, NULL),
 (19, 'Clark', 'Natalie', 'natalieclark@yahoo.com', '$2y$10$N4u.LUvm91Wfv4A51WDkIeu4gM4ayanyALFym.q5VUzz2.ZDDLpdK', 3, 0, NULL),
-(20, 'Parker', 'Daniel', 'danielparker@outlook.fr', '$2y$10$N4u.LUvm91Wfv4A51WDkIeu4gM4ayanyALFym.q5VUzz2.ZDDLpdK', 1, 0, NULL),
+(20, 'Parker', 'Daniel', 'danielparker@outlook.fr', '$2y$10$N4u.LUvm91Wfv4A51WDkIeu4gM4ayanyALFym.q5VUzz2.ZDDLpdK', 3, 0, NULL),
 (21, 'Lewis', 'Sophie', 'sophielewis@gmail.fr', '$2y$10$N4u.LUvm91Wfv4A51WDkIeu4gM4ayanyALFym.q5VUzz2.ZDDLpdK', 3, 0, NULL),
 (22, 'Harris', 'Alexander', 'alexanderharris@yahoo.com', '$2y$10$N4u.LUvm91Wfv4A51WDkIeu4gM4ayanyALFym.q5VUzz2.ZDDLpdK', 2, 0, NULL),
 (23, 'Adams', 'Victoria', 'victoriaadams@icloud.com', '$2y$10$N4u.LUvm91Wfv4A51WDkIeu4gM4ayanyALFym.q5VUzz2.ZDDLpdK', 3, 0, NULL),
